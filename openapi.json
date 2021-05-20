@@ -1,0 +1,648 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "hyper-workshop",
+    "description": "![logo](https://hyper.io/all.png)\n# Welcome to hyper workshop\nBuild a movie review app\n",
+    "contact": {
+      "url": "https://hyper.io/contact",
+      "email": "info@hyper.io",
+      "name": "hyper"
+    },
+    "license": {
+      "name": "Apache Licnense 2.0"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "description": "Development Server",
+      "url": "http://localhost:3000"
+    },
+    {
+      "description": "Production Server",
+      "url": "https://movies.hyper.io"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "description": "Healthcheck endpoint",
+        "responses": {
+          "200": {
+            "description": "successful health response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "name": {
+                      "description": "webcms",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/movies": {
+      "post": {
+        "tags": [
+          "movies"
+        ],
+        "description": "add movie",
+        "requestBody": {
+          "description": "movie document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successfully added movie document"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "409": {
+            "description": "document exists"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/movies/_search": {
+      "post": {
+        "description": "find movies",
+        "tags": [
+          "movies"
+        ],
+        "requestBody": {
+          "description": "movie criteria",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/criteria"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "movie search results"
+          }
+        }
+      }
+    },
+    "/api/movies/{id}": {
+      "get": {
+        "tags": [
+          "movies"
+        ],
+        "description": "get movie by identifier",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "movies"
+        ],
+        "description": "update movie document",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "movie document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "movies"
+        ],
+        "description": "remove movie document",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully removed movie document"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/movies/{id}/reviews": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "get reviews for a given movie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "404": {
+            "description": "movie not found"
+          }
+        }
+      }
+    },
+    "/api/reviews": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "get logged in user movie reviews",
+        "responses": {
+          "200": {
+            "description": "success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "create movie review",
+        "requestBody": {
+          "description": "review document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "409": {
+            "description": "document exists"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/reviews/{id}": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "get movie review document",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/review"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "update movie review document",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "review document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "reviews"
+        ],
+        "description": "remove movie review document",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "not found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/reviews/{id}/reactions": {
+      "get": {
+        "tags": [
+          "reviews",
+          "reactions"
+        ],
+        "description": "get reaction summary for a review",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reaction-summary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/api/reactions": {
+      "post": {
+        "tags": [
+          "reactions"
+        ],
+        "description": "likes and dislikes for movie reviews",
+        "requestBody": {
+          "description": "reaction document",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/reaction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "409": {
+            "description": "document exists"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Login to App",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/callback": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "description": "OAuth handler",
+        "responses": {
+          "302": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "description": "Logout of App",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "reaction-summary": {
+        "properties": {
+          "reviewId": {
+            "type": "string"
+          },
+          "likes": {
+            "type": "integer"
+          },
+          "dislikes": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "reaction": {
+        "required": [
+          "id",
+          "reviewId",
+          "reaction"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reviewId": {
+            "type": "string"
+          },
+          "reaction": {
+            "type": "string",
+            "enum": [
+              "like",
+              "dislike"
+            ]
+          },
+          "user": {
+            "type": "string"
+          }
+        }
+      },
+      "review": {
+        "required": [
+          "id",
+          "movieId",
+          "rating",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "movieId": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "summary": {
+            "type": "string",
+            "maximum": 200
+          },
+          "author": {
+            "type": "string"
+          }
+        }
+      },
+      "movie": {
+        "required": [
+          "id",
+          "title",
+          "year",
+          "genre",
+          "actors"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "string"
+          },
+          "actors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "genre": {
+            "type": "string",
+            "enum": [
+              "action",
+              "comedy",
+              "horror",
+              "scifi",
+              "drama",
+              "romance"
+            ]
+          }
+        }
+      },
+      "criteria": {
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "string",
+            "enum": [
+              "action",
+              "comedy",
+              "horror",
+              "scifi",
+              "drama",
+              "romance"
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

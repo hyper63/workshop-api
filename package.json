@@ -1,0 +1,24 @@
+{
+  "name": "workshop-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/hyper63/workshop-api.git",
+  "author": "Tom Wilson <twilson63@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "crocks": "^0.12.4",
+    "express": "^4.17.1",
+    "ramda": "^0.27.1",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "dotenv": "^9.0.2",
+    "nodemon": "^2.0.7",
+    "swagger-cli": "^4.0.4"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "swagger-cli bundle -o openapi.json -t json openapi.yml && nodemon -r dotenv/config server.js"
+  }
+}
