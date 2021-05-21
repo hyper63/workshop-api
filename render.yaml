@@ -1,0 +1,19 @@
+services:
+  - name: moviereview-api
+    type: web
+    env: node
+    branch: main
+    buildCommand: yarn
+    startCommand: yarn start
+    envVars:
+      - key: HYPER
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: CLIENT_ID
+        sync: false
+      - key: CLIENT_SECRET
+        sync: false
+    domains:
+      - moviereview-api.hyper.io
+
