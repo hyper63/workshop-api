@@ -1,4 +1,4 @@
-const validate = require('./schema')
+const { validate, schema } = require('./schema')
 const verify = require('../lib/verify')
 const { assoc } = require('ramda')
 const { Async } = require('crocks')
@@ -23,10 +23,14 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  function get(id) {
+    return services.data.get(id).map(schema.parse)
+  }
 
   return {
     post,
-    put
+    put,
+    get
   }
 }
 
@@ -37,4 +41,7 @@ function createId(movie) {
   }
   return movie
 }
+
+
+
 
