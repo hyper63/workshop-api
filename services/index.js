@@ -32,10 +32,6 @@ module.exports = {
 }
 
 function create(doc) {
-  console.log('movie', doc)
-  console.log('url', hyper.url('data'))
-  console.log('token', hyper.token())
-
   return asyncFetch(hyper.url('data'), {
     method: 'POST',
     headers: {
