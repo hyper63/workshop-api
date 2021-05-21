@@ -23,7 +23,7 @@ const postMovie = require('./api/movies/index.js').post
 const movie = require('./api/movies/[id]/index.js')
 
 // REVIEWS api endpoints
-const postReview = require('./api/reviews/index.js').post
+const reviews = require('./api/reviews')
 const review = require('./api/reviews/[id]/index.js')
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
@@ -53,8 +53,8 @@ app.delete('/api/movies/:id', noop)
 
 // reviews
 app.get('/api/movies/:id/reviews', noop)
-app.get('/api/reviews', noop)
-app.post('/api/reviews', postReview)
+app.get('/api/reviews', reviews.get)
+app.post('/api/reviews', reviews.post)
 app.get('/api/reviews/:id', review.get)
 app.put('/api/reviews/:id', review.put)
 app.delete('/api/reviews/:id', noop)

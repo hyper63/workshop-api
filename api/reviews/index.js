@@ -10,3 +10,7 @@ exports.post = async ({user, body, core}, res, next) => {
     next(err)
   }
 }
+
+exports.get = ({core, user}, res, next) => 
+  core.reviews.byUser(user)
+    .fork(next, res.json.bind(res))

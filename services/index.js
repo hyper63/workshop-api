@@ -1,5 +1,6 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
+const { assoc } = require('ramda')
 
 if (!globalThis.fetch) { 
   throw new Error('fetch is not defined')
@@ -20,7 +21,8 @@ module.exports = {
   data: {
     create,
     update,
-    get
+    get,
+    query
   },
   search: {
   
@@ -31,6 +33,21 @@ module.exports = {
   storage: {
   
   }
+}
+
+function query(selector, fields, limit = 20) {
+  let body = {selector}
+  body = fields ? assoc('fields', fields, body) : body
+  body = limit ? assoc('limit', limit, body) : body
+
+  return asyncFetch(hyper.url('data', '_query'), {
+    method: 'POST', 
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify(body)
+  }).chain(toJSON)
 }
 
 function update(id, doc) {
