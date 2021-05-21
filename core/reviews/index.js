@@ -1,8 +1,9 @@
-const { validate, schema } = require('./schema')
+const { validate } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc } = require('ramda')
+const { assoc, identity } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
+//const { identity } = require('crocks/combinators')
 
 module.exports = (services) => {
   function post(review) {
@@ -23,9 +24,18 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  // function get(id) {
+  //   return services.data.get(id).map(schema.parse)
+  // }
+
   function get(id) {
-    return services.data.get(id).map(schema.parse)
+    return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
+
   }
+
+
+ 
+
 
   return {
     post,
