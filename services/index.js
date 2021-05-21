@@ -19,6 +19,7 @@ const toJSON = res => {
 module.exports = {
   data: {
     create,
+    get
   },
   search: {
   
@@ -42,4 +43,13 @@ function create(doc) {
   }).chain(toJSON)
 }
 
+function get(id) {
+  return asyncFetch(hyper.url('data', id ), {
+      method: 'GET',
+       headers: { 
+          Authorization: `Bearer ${hyper.token()}`,
+          Accept: 'application/json'
+  }
+  }).chain(toJSON)
+}
 

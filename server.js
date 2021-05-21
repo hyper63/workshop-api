@@ -9,13 +9,15 @@ if (!globalThis.fetch) {
 }
 
 const core = require('./middleware/core')
-
+console.log('**********')
+console.log('hyper', process.env.HYPER)
+console.log('**********')
 // api endpoints
 const login = require('./api/auth/login')
 const logout = require('./api/auth/logout')
 const callback = require('./api/auth/callback')
 const postMovie = require('./api/movies/index.js').post
-
+const getMovieById = require('./api/movies/[id]/index').get
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
 
@@ -37,7 +39,7 @@ app.use(session({
 // movies
 app.post('/api/movies', postMovie)
 app.post('/api/movies/_search', noop)
-app.get('/api/movies/:id', noop)
+app.get('/api/movies/:id', getMovieById)
 app.put('/api/movies/:id', noop)
 app.delete('/api/movies/:id', noop)
 
