@@ -14,14 +14,23 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  function put(id, movie) {
+    return Async.of(movie)
+      .map(assoc('id', id))
+      .chain(validate)
+      .map(assoc('type', 'movie'))
+      .chain(movie => services.data.update(id, movie))
+      .chain(verify)
+  }
+
   function get(id) {
     return services.data.get(id).map(schema.parse)
   }
 
   return {
     post,
+    put,
     get
-
   }
 }
 
