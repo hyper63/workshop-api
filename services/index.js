@@ -23,7 +23,7 @@ module.exports = {
     get
   },
   search: {
-  
+    query  
   },
   cache: {
   
@@ -31,6 +31,22 @@ module.exports = {
   storage: {
   
   }
+}
+
+/**
+ * @param {string} query
+ * @param {array} fields - ['title', 'year']
+ * @param {object} filter - { type: 'movie' }
+*/
+function query(query, fields, filter) {
+  return asyncFetch(hyper.url('search', '_query'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({ query, fields, filter})
+  }).chain(toJSON)
 }
 
 function update(id, doc) {

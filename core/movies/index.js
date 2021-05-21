@@ -1,4 +1,4 @@
-const { validate, schema } = require('./schema')
+const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
 const { assoc } = require('ramda')
 const { Async } = require('crocks')
@@ -27,10 +27,33 @@ module.exports = (services) => {
     return services.data.get(id).map(schema.parse)
   }
 
+  function search(criteria) {
+    return Async.of(criteria)
+      .chain(validateCriteria)
+      .map(criteria => {
+        const query = [criteria.title, criteria.year, criteria.genre].join(' ')
+
+        return {
+          query,
+          filter: { type: 'movie'}
+        }
+      })
+      .chain(doc => 
+        services.search.query(
+            doc.query, 
+            ['title', 'year', 'genre'], 
+            doc.filter
+        )
+      )
+      .chain(verify)
+
+  }
+
   return {
     post,
     put,
-    get
+    get,
+    search
   }
 }
 
