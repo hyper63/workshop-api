@@ -17,3 +17,4 @@ jobs:
         env:
           CI: true
           HYPER: ${{ secrets.HYPER }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
