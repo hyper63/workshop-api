@@ -1,6 +1,6 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc } = require('ramda')
+const { assoc, identity } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 
@@ -24,7 +24,7 @@ module.exports = (services) => {
   }
 
   function get(id) {
-    return services.data.get(id).map(schema.parse)
+    return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
   }
 
   function search(criteria) {

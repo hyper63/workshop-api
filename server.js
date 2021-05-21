@@ -12,12 +12,19 @@ const core = require('./middleware/core')
 console.log('**********')
 console.log('hyper', process.env.HYPER)
 console.log('**********')
-// api endpoints
+
+// AUTH api endpoints
 const login = require('./api/auth/login')
 const logout = require('./api/auth/logout')
 const callback = require('./api/auth/callback')
+
 const movies = require('./api/movies')
 const movie = require('./api/movies/[id]')
+
+// REVIEWS api endpoints
+const postReview = require('./api/reviews/index.js').post
+const review = require('./api/reviews/[id]/index.js')
+
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
 
 const app = express()
@@ -45,9 +52,9 @@ app.delete('/api/movies/:id', noop)
 // reviews
 app.get('/api/movies/:id/reviews', noop)
 app.get('/api/reviews', noop)
-app.post('/api/reviews', noop)
-app.get('/api/reviews/:id', noop)
-app.put('/api/reviews/:id', noop)
+app.post('/api/reviews', postReview)
+app.get('/api/reviews/:id', review.get)
+app.put('/api/reviews/:id', review.put)
 app.delete('/api/reviews/:id', noop)
 
 // reactions
