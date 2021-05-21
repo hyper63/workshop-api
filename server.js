@@ -15,6 +15,8 @@ const login = require('./api/auth/login')
 const logout = require('./api/auth/logout')
 const callback = require('./api/auth/callback')
 const postMovie = require('./api/movies/index.js').post
+const movie = require('./api/movies/[id]/index.js')
+
 
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
@@ -38,7 +40,7 @@ app.use(session({
 app.post('/api/movies', postMovie)
 app.post('/api/movies/_search', noop)
 app.get('/api/movies/:id', noop)
-app.put('/api/movies/:id', noop)
+app.put('/api/movies/:id', movie.put)
 app.delete('/api/movies/:id', noop)
 
 // reviews

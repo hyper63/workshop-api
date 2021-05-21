@@ -19,6 +19,7 @@ const toJSON = res => {
 module.exports = {
   data: {
     create,
+    update
   },
   search: {
   
@@ -29,6 +30,17 @@ module.exports = {
   storage: {
   
   }
+}
+
+function update(id, doc) {
+  return asyncFetch(hyper.url('data', id), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify(doc)
+  }).chain(toJSON)
 }
 
 function create(doc) {

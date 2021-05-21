@@ -14,9 +14,19 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  function put(id, movie) {
+    return Async.of(movie)
+      .map(assoc('id', id))
+      .chain(validate)
+      .map(assoc('type', 'movie'))
+      .chain(movie => services.data.update(id, movie))
+      .chain(verify)
+  }
+
 
   return {
-    post
+    post,
+    put
   }
 }
 
