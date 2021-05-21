@@ -21,6 +21,8 @@ const callback = require('./api/auth/callback')
 // MOVIE api endpoints
 const postMovie = require('./api/movies/index.js').post
 const movie = require('./api/movies/[id]/index.js')
+const movieReviews = require('./api/movies/[id]/reviews')
+
 
 // REVIEWS api endpoints
 const postReview = require('./api/reviews/index.js').post
@@ -50,6 +52,7 @@ app.put('/api/movies/:id', movie.put)
 app.get('/api/movies/:id', movie.get)
 app.put('/api/movies/:id', noop)
 app.delete('/api/movies/:id', noop)
+app.get('/api/movies/:id/reviews', movieReviews)
 
 // reviews
 app.get('/api/movies/:id/reviews', noop)
