@@ -8,6 +8,10 @@
   hyper workshop movie review api
 </h1>
 
+<p align="center">
+<img src="https://github.com/hyper63/workshop-api/workflows/.github/workflows/test.yml/badge.svg" />
+</p>
+
 ---
 
 ## Table of Contents
