@@ -9,9 +9,6 @@ if (!globalThis.fetch) {
 }
 
 const core = require('./middleware/core')
-console.log('**********')
-console.log('hyper', process.env.HYPER)
-console.log('**********')
 
 // AUTH api endpoints
 const login = require('./api/auth/login')
@@ -25,6 +22,9 @@ const movie = require('./api/movies/[id]/index.js')
 // REVIEWS api endpoints
 const postReview = require('./api/reviews/index.js').post
 const review = require('./api/reviews/[id]/index.js')
+
+// REACTIONS api endpoints
+const postReaction = require('./api/reactions/index.js').post
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
 
@@ -41,7 +41,6 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: 'auto' }
 }))
-
 
 // movies
 app.post('/api/movies', postMovie)
@@ -61,7 +60,7 @@ app.delete('/api/reviews/:id', noop)
 
 // reactions
 app.get('/api/reviews/:id/reactions', noop)
-app.post('/api/reactions', noop)
+app.post('/api/reactions', postReaction)
 
 // auth
 app.get('/api/auth/login', login)

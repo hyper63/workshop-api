@@ -20,7 +20,8 @@ module.exports = {
   data: {
     create,
     update,
-    get
+    get,
+    del
   },
   search: {
   
@@ -58,6 +59,16 @@ function create(doc) {
 function get(id) {
   return asyncFetch(hyper.url('data', id ), {
       method: 'GET',
+       headers: { 
+          Authorization: `Bearer ${hyper.token()}`,
+          Accept: 'application/json'
+  }
+  }).chain(toJSON)
+}
+
+function del(id) {
+  return asyncFetch(hyper.url('data', id ), {
+      method: 'DELETE',
        headers: { 
           Authorization: `Bearer ${hyper.token()}`,
           Accept: 'application/json'
