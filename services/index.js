@@ -22,7 +22,8 @@ module.exports = {
     create,
     update,
     get,
-    query
+    query,
+    del
   },
   search: {
     query: find
@@ -104,6 +105,16 @@ function get(id) {
       Authorization: `Bearer ${hyper.token()}`,
       Accept: 'application/json'
     }
+  }).chain(toJSON)
+}
+
+function del(id) {
+  return asyncFetch(hyper.url('data', id ), {
+      method: 'DELETE',
+       headers: { 
+          Authorization: `Bearer ${hyper.token()}`,
+          Accept: 'application/json'
+  }
   }).chain(toJSON)
 }
 
