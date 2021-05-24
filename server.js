@@ -19,13 +19,12 @@ const logout = require('./api/auth/logout')
 const callback = require('./api/auth/callback')
 
 // MOVIE api endpoints
-const postMovie = require('./api/movies/index.js').post
-const movie = require('./api/movies/[id]/index.js')
 const movieReviews = require('./api/movies/[id]/reviews')
-
+const movies = require('./api/movies')
+const movie = require('./api/movies/[id]')
 
 // REVIEWS api endpoints
-const postReview = require('./api/reviews/index.js').post
+const reviews = require('./api/reviews')
 const review = require('./api/reviews/[id]/index.js')
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
@@ -46,18 +45,17 @@ app.use(session({
 
 
 // movies
-app.post('/api/movies', postMovie)
-app.post('/api/movies/_search', noop)
+app.post('/api/movies', movies.post)
+app.post('/api/movies/_search', movies.search)
 app.put('/api/movies/:id', movie.put)
 app.get('/api/movies/:id', movie.get)
-app.put('/api/movies/:id', noop)
 app.delete('/api/movies/:id', noop)
 app.get('/api/movies/:id/reviews', movieReviews)
 
 // reviews
 app.get('/api/movies/:id/reviews', noop)
-app.get('/api/reviews', noop)
-app.post('/api/reviews', postReview)
+app.get('/api/reviews', reviews.get)
+app.post('/api/reviews', reviews.post)
 app.get('/api/reviews/:id', review.get)
 app.put('/api/reviews/:id', review.put)
 app.delete('/api/reviews/:id', noop)

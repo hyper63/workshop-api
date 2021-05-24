@@ -11,3 +11,10 @@ exports.post = async ({user, body, core}, res, next) => {
   }
 }
 
+exports.search = ({core, body}, res, next) => 
+  core.movies.search(body)
+    .fork(
+      next,
+      res.json.bind(res)
+    )
+

@@ -35,11 +35,19 @@ module.exports = (services) => {
   }
 
 
+  function byUser(user) {
+    return services.data.query({
+      type: 'review',
+      author: user
+    }).chain(verify)
+  }
+
   return {
     post,
     put,
     get,
-    byMovie
+    byMovie,
+    byUser 
   }
 }
 
