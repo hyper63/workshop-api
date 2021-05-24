@@ -27,10 +27,27 @@ module.exports = (services) => {
     return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
   }
 
+  function byMovie(id) {
+    return services.data.query({
+      type: 'review',
+      movie: id 
+    }).chain(verify)
+  }
+
+
+  function byUser(user) {
+    return services.data.query({
+      type: 'review',
+      author: user
+    }).chain(verify)
+  }
+
   return {
     post,
     put,
-    get
+    get,
+    byMovie,
+    byUser 
   }
 }
 
