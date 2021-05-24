@@ -1,8 +1,7 @@
 const test = require('tape')
 const testServer = require('@twilson63/test-server')
+
 const app = require('../server')
-
-
 
 const fetch = require('node-fetch')
 
@@ -17,8 +16,6 @@ test('POST /api/movies successfully', async t => {
     headers: {
       'Content-Type': 'application/json',
       /*Authorization: `Bearer ${token}`*/
-      'Cookie' : 'session=foobar'
-
     },
     body: JSON.stringify({
       id: 'ghostbusters-1',

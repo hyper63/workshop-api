@@ -2,7 +2,7 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - init: yarn && npx zx scripts/setup-vim.mjs && export PS1=":) " && clear
+  - init: yarn && npx zx scripts/setup-vim.mjs
 
 github:
   prebuilds:

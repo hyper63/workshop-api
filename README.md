@@ -1,7 +1,7 @@
 # README
 
 <div align="center">
-  <img src="https://hyper.io/all.svg" alt="all the things hyper" />
+  <img src="https://hyper.io/all.svg" width="400px" alt="all the things hyper" />
 </div>
 
 <h1 align="center">

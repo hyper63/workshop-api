@@ -1,12 +1,7 @@
 const test = require('tape')
-const rewire = require('rewire')
 const testServer = require('@twilson63/test-server')
-const app = rewire('../server')
-
-app.__set__('session', () => (req, res, next) => {
-  req.session = { user: { login: 'foo' } } 
-  next()
-})
+//const app = require('./setup')
+const app = require('../server')
 
 const fetch = require('node-fetch')
 
