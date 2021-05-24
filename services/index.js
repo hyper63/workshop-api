@@ -41,7 +41,7 @@ function query(selector, fields, limit = 20) {
   body = limit ? assoc('limit', limit, body) : body
 
   return asyncFetch(hyper.url('data', '_query'), {
-    method: 'POST', 
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${hyper.token()}`

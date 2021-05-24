@@ -18,6 +18,8 @@ const login = require('./api/auth/login')
 const logout = require('./api/auth/logout')
 const callback = require('./api/auth/callback')
 
+// MOVIE api endpoints
+const movieReviews = require('./api/movies/[id]/reviews')
 const movies = require('./api/movies')
 const movie = require('./api/movies/[id]')
 
@@ -48,6 +50,7 @@ app.post('/api/movies/_search', movies.search)
 app.put('/api/movies/:id', movie.put)
 app.get('/api/movies/:id', movie.get)
 app.delete('/api/movies/:id', noop)
+app.get('/api/movies/:id/reviews', movieReviews)
 
 // reviews
 app.get('/api/movies/:id/reviews', noop)
