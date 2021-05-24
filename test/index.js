@@ -24,4 +24,5 @@ require('./reviews-by-user_test.js')
 require('./movies-search_test.js')
 require('./reactions-post-index_test.js')
 require('./reactions-by-review_test.js')
+require('./auth_test.js')
 
