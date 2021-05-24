@@ -39,6 +39,7 @@ app.use(core)
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -46,7 +47,10 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
+/*
+ * disabled, should be address in its own issue
 app.use(auth)
+*/
 
 // movies
 app.post('/api/movies', movies.post)
