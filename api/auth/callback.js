@@ -24,8 +24,23 @@ module.exports = async (req, res) => {
           authorization: `Bearer ${result.access_token}`
         }
       }).then(res => res.json())
-    req.session.user = user
+    // req.session.user = user
+    // req.session.token = result.access_token
+      console.log('>>>>>>>>>>>>>>>>>>>>>')
+      console.log('>>>>>>>>>>>>>>>>>>>>>')
+      console.log('api/auth/callback.js')
+    
+      console.log('user: ', user)
+      console.log('token: ', result.access_token)
+      req.session.user = user
+
+
     req.session.token = result.access_token
+    console.log('')
+    console.log('req.session.user: ' , req.session.user)
+    console.log('req.session.token: ', req.session.token)
+    console.log('<<<<<<<<<<<<<<<<<<<<<<')
+    console.log('<<<<<<<<<<<<<<<<<<<<<<')
     res.json({ user })
   }
   res.status(400).json({ok: false})

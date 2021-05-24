@@ -6,12 +6,12 @@ const app = require('../server')
 
 const fetch = require('node-fetch')
 
-test('POST /api/movies successfully', async t => {
+test('POST /api/reactions successfully', async t => {
   t.plan(1)
 
   const server = testServer(app)
 
-  const result = await fetch(server.url + '/api/movies', {
+  const result = await fetch(server.url + '/api/reactions', {
     method: 'POST',
 
     headers: {
@@ -20,12 +20,12 @@ test('POST /api/movies successfully', async t => {
       'Cookie' : 'session=foobar'
 
     },
-    body: JSON.stringify({
-      id: 'ghostbusters-1',
-      title: 'Ghostbusters',
-      year: '1984',
-      actors: ['Bill Murray', 'Dan Aykroyd'],
-      genre: 'comedy'
+    body: JSON.stringify(
+      {
+        id: "reaction-ghostbusters-1-tom", 
+        reviewId: "ghostbusters-1-tom", 
+        reaction: "like",
+        user: 'staypuft man'
     })
   }).then(r => r.json())
 

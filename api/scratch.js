@@ -1,0 +1,1 @@
+curl -X POST http://localhost:3000/api/reactions -H 'accept: */*' -H 'Content-Type: application/json' -d '{"id": "reaction-3", "reviewId": "roadhouse-1-tom", "reaction": "like", "user": "Bob"}'
