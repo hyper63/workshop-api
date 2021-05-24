@@ -12,29 +12,24 @@ const endpoints = [
 ]
 
 const isProtectedEndpoint =  ({method, path}) => {
-   console.log('isProtectedEndpoint', {method, path})
   return not(isNil(find(endpoint => endpoint.method === method && includes( endpoint.path, path) , endpoints)))
 }
 
 module.exports = (req, res, next) => {
-    const {method, path} = req 
-    // check path, if path is protected
-    if (isProtectedEndpoint({method, path})) {
-      console.log('isProtectedEndpoint', true)
-      // check is session.user exists
-      console.log({session: req.session})
-      if (req.session.user) {
-        // get user name
-        console.log('hooray, authorized!', 'req.session.user.login', req.session.user.login)
 
-        req.user = req.session.user.login
-        next()
-      } else {
-        console.log({status: 401, message: 'not authorized'})
-        next({status: 401, message: 'not authorized'})
-      }
+  const {method, path, session, headers} = req
+
+  // check path, if path is protected
+  if (isProtectedEndpoint({method, path})) {
+    // check is session.user exists
+    if (session.user) {
+      // get user name
+      req.user = session.user.login
+      next()
     } else {
-      console.log('isProtectedEndpoint', false)
-        next()
+      next({status: 401, message: 'not authorized'})
     }
+  } else {
+    next()
   }
+}
