@@ -25,13 +25,8 @@ const movie = require('./api/movies/[id]')
 const reviews = require('./api/reviews')
 const review = require('./api/reviews/[id]/index.js')
 
-<<<<<<< HEAD
-// REACTIONS api endpoints
-const postReaction = require('./api/reactions/index.js').post
-=======
 // reactions api endpoint
 const reactionsByReview = require('./api/reviews/[id]/reactions.js').get
->>>>>>> main
 
 const noop = (req, res) => res.status(406).json({status: 'not implemented'})
 
@@ -69,13 +64,8 @@ app.put('/api/reviews/:id', review.put)
 app.delete('/api/reviews/:id', noop)
 
 // reactions
-<<<<<<< HEAD
-app.get('/api/reviews/:id/reactions', noop)
-app.post('/api/reactions', postReaction)
-=======
 app.get('/api/reviews/:id/reactions', reactionsByReview)
 app.post('/api/reactions', noop)
->>>>>>> main
 
 // auth
 app.get('/api/auth/login', login)
