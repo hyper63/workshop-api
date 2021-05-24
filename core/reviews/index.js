@@ -49,14 +49,14 @@ module.exports = (services) => {
     console.log('>>>>>>>>>>>>>>>>>')
     console.log('core reviews index.js del', {id, user})
 
-    const review = get(id)
+    //const review = get(id)
 
-    console.log('review: ', review)
+    //console.log('review: ', review)
 
-    const {author} = review
-    console.log('author: ', author)
+    //const {author} = review
+    //console.log('author: ', author)
 
-    return services.data.get(id).chain(validateUserIsAuthor)
+    return services.data.get(id).chain(validateUserIsAuthor(user))
 
     // if (author != user) {
 
