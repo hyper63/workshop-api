@@ -1,19 +1,30 @@
 const {not, isNil, find, includes} = require('ramda')
 
 const endpoints = [
-    //{method: "GET", path: "/api/reviews"},
-    {method: "POST", path: "/api/movies"},
-    {method: "PUT", path: "/api/movies"},
-    {method: "DELETE", path: "/api/movies"},
-    {method: "POST", path: "/api/reviews"},
-    {method: "PUT", path: "/api/reviews"},
-    {method: "DELETE", path: "/api/reviews"},
-    {method: "POST", path: "/api/reactions"}
+  //{method: "GET", path: "/api/reviews"},
+  {method: "POST", path: "/api/movies"},
+  {method: "PUT", path: "/api/movies"},
+  {method: "DELETE", path: "/api/movies"},
+  {method: "POST", path: "/api/reviews"},
+  {method: "PUT", path: "/api/reviews"},
+  {method: "DELETE", path: "/api/reviews"},
+  {method: "POST", path: "/api/reactions"}
+]
+
+
+const okEndpoints = [
+{ method: 'POST', path: '/api/movies/_search' }
 ]
 
 const isProtectedEndpoint =  ({method, path}) => {
-   console.log('isProtectedEndpoint', {method, path})
-  return not(isNil(find(endpoint => endpoint.method === method && includes( endpoint.path, path) , endpoints)))
+ console.log('isProtectedEndpoint', {method, path})
+return not(
+  isNil(
+    find(endpoint => endpoint.method === method && includes( endpoint.path, path) , endpoints)
+  )
+) && isNil(
+  find(endpoint => endpoint.method === method && includes( endpoint.path, path) , okEndpoints)
+)
 }
 
 module.exports = (req, res, next) => {

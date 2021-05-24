@@ -16,7 +16,13 @@ globalThis.fetch = fetchMock.sandbox()
 require('./health-check_test.js')
 require('./movies-post-index_test.js')
 require('./movies-put-id_test.js')
-require('./reactions-by-review_test.js')
+
+require('./reviews-post-index_test')
+
+
 require('./movies-id-reviews_test.js')
 require('./reviews-by-user_test.js')
 require('./movies-search_test.js')
+
+require('./reactions-post-index_test.js')
+require('./reactions-by-review_test.js')
