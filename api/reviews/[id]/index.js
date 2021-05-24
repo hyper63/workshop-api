@@ -18,7 +18,7 @@ exports.get = async ({core, params}, res, next) => {
 
     // https://3000-rose-porpoise-5vewhcdw.ws-us07.gitpod.io/api/reviews/roadhouse-1-tom. >> 
     //.  {"id":"roadhouse-1-tom","movieId":"roadhouse-1","rating":5,"summary":"Swayze Crazee","author":"Tom W."}
-    const mockUser = 'Tom W.'
+    const mockUser = 'Ott'
     console.log(`reviews.${id}.del request MOCK user: ${mockUser}`)
 
     try {

@@ -1,10 +1,14 @@
 const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity } = require('ramda')
+const { assoc, identity, prop, map } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
+const reactions = require('../reactions/index')
 
 module.exports = (services) => {
+
+  
+
   function post(review) {
     return Async.of(review) 
       .map(createId)
@@ -43,21 +47,28 @@ module.exports = (services) => {
   }
 
 
+  const delDoc = ({id}) => services.data.del(id)
+
+
   function del({id, user}) {
 
-    /* delete review 
-      NOTE: the business logic should cascade and remove all reactions to a given review
-    */
+    return services.data.get(id)
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
+    .chain(validateUserIsAuthor(user))
+    .chain(review => reactions(services).byReview(id))
+    .chain(verify)
+    .map(prop('docs'))
+    .chain(reactions => Async.all(
+      map(delDoc , reactions)
+    ))
+    .chain(results => Async.all(map(verify, results)))
+    .chain( _ => services.data.del(id))
+    .chain(verify)
 
-    console.log('>>>>>>>>>>>>>>>>>')
-    console.log('>>>>>>>>>>>>>>>>>')
-    console.log('core reviews index.js del', {id, user})
-
-    return services.data.get(id).chain(validateUserIsAuthor(user))
   }
 
   
-
   return {
     post,
     put,
