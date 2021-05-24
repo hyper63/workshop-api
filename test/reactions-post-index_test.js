@@ -22,8 +22,8 @@ test('POST /api/reactions successfully', async t => {
     },
     body: JSON.stringify(
       {
-        id: "reaction-1", 
-        reviewId: "roadhouse-1-tom", 
+        id: "reaction-ghostbusters-1-tom", 
+        reviewId: "ghostbusters-1-tom", 
         reaction: "like"
     })
   }).then(r => r.json())

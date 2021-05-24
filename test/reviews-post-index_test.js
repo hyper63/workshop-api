@@ -22,10 +22,10 @@ test('POST /api/reviews successfully', async t => {
     },
     body: JSON.stringify(
       {
-      id:"roadhouse-1-tom",
-      movieId:"roadhouse-1",
+      id:"ghostbusters-1-tom",
+      movieId:"ghostbusters-1",
       rating:5,
-      summary:"Swayze Crazee"
+      summary:"Staypuft Marshmellow Man is the greatest!"
     })
   }).then(r => r.json())
 

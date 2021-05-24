@@ -21,6 +21,7 @@ test('POST /api/movies successfully', async t => {
 
     },
     body: JSON.stringify({
+      id: 'ghostbusters-1',
       title: 'Ghostbusters',
       year: '1984',
       actors: ['Bill Murray', 'Dan Aykroyd'],
