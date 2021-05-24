@@ -2,8 +2,6 @@ const test = require('tape')
 const testServer = require('@twilson63/test-server')
 const app = require('../server')
 
-
-
 const fetch = require('node-fetch')
 
 test('POST /api/reviews successfully', async t => {

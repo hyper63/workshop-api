@@ -26,8 +26,8 @@ const isProtectedEndpoint =  ({method, path}) => {
   )
 }
 
-module.exports = (req, res, next) => {
-
+exports.check = (req, res, next) => {
+  console.log('checking auth')
   const {method, path, session, headers} = req
 
   // check path, if path is protected

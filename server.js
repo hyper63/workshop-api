@@ -2,14 +2,14 @@ const express = require('express')
 const cors = require('cors')
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./openapi.json')
-var session = require('express-session')
+const session = require('express-session')
 
 if (!globalThis.fetch) {
   globalThis.fetch = require('node-fetch')
 }
 
 const core = require('./middleware/core')
-const auth = require('./middleware/auth')
+var auth = require('./middleware/auth')
 
 // AUTH api endpoints
 const login = require('./api/auth/login')
@@ -47,10 +47,7 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
-/*
- * disabled, should be address in its own issue
-app.use(auth)
-*/
+app.use(auth.check)
 
 // movies
 app.post('/api/movies', movies.post)
