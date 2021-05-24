@@ -1,0 +1,39 @@
+***** ROADHOUSE ******
+
+
+
+
+// review
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-5-roadhouse-1","movieId": "roadhouse-1","rating": 5,"summary": "So bad, its good","author": "Ott"}'
+
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-6-roadhouse-1","movieId": "roadhouse-1","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
+
+// reaction
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Arnold"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Tom W"}'
+ 
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Jeff"}'
+
+
+
+
+***** COMMANDO ****
+// movie
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando-1", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action"}'
+
+// review
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-commando-1","movieId": "commando-1","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
+
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-2-commando-1","movieId": "commando-1","rating": 1,"summary": "So bad, I threw up in my mouth","author": "Ott"}'
+
+// reaction
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Arnold"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Tom W"}'
+ 
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Jeff"}'

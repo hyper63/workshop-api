@@ -63,7 +63,7 @@ app.get('/api/reviews', reviews.get)
 app.post('/api/reviews', reviews.post)
 app.get('/api/reviews/:id', review.get)
 app.put('/api/reviews/:id', review.put)
-app.delete('/api/reviews/:id', noop)
+app.delete('/api/reviews/:id', review.del)
 
 // reactions
 app.get('/api/reviews/:id/reactions', reactionsByReview)
