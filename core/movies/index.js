@@ -1,4 +1,4 @@
-const { validate } = require('./schema')
+const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
 const { assoc, identity } = require('ramda')
 const { Async } = require('crocks')
@@ -27,10 +27,33 @@ module.exports = (services) => {
     return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
   }
 
+  function search(criteria) {
+    return Async.of(criteria)
+      .chain(validateCriteria)
+      .map(criteria => {
+        const query = [criteria.title, criteria.year, criteria.genre].join(' ')
+
+        return {
+          query,
+          filter: { type: 'movie'}
+        }
+      })
+      .chain(doc => 
+        services.search.query(
+            doc.query, 
+            ['title', 'year', 'genre'], 
+            doc.filter
+        )
+      )
+      .chain(verify)
+
+  }
+
   return {
     post,
     put,
-    get
+    get,
+    search
   }
 }
 

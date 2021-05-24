@@ -15,7 +15,7 @@
     "node-fetch": "^2.6.1",
     "ramda": "^0.27.1",
     "swagger-ui-express": "^4.1.6",
-    "zod": "^3.0.0-beta.4"
+    "zod": "^3.0.2"
   },
   "devDependencies": {
     "@twilson63/test-server": "^1.0.2",
