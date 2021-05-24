@@ -11,6 +11,12 @@ const schema = z.object({
   genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance'])
 })
 
+const criteriaSchema = z.object({
+  title: z.string().optional(),
+  year: z.string().optional(),
+  genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance']).optional()
+})
+
 function validate (movie) {
   return Async.of(movie)
   .map(schema.safeParse)
@@ -19,8 +25,17 @@ function validate (movie) {
     : Left(formatErrors(error))
   ).chain(eitherToAsync)
 } 
- 
+
+function validateCriteria (criteria) {
+  return Async.of(criteria)
+    .map(criteriaSchema.safeParse)
+    .map(({success, data, error}) => success
+      ? Right(data)
+      : Left(formatErrors(error))
+    ).chain(eitherToAsync)
+}
+
 module.exports = {
   validate,
-  schema
+  validateCriteria
 }
