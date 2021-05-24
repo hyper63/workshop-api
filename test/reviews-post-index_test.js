@@ -25,7 +25,8 @@ test('POST /api/reviews successfully', async t => {
       id:"ghostbusters-1-tom",
       movieId:"ghostbusters-1",
       rating:5,
-      summary:"Staypuft Marshmellow Man is the greatest!"
+      summary:"Staypuft Marshmellow Man is the greatest!",
+      author: 'staypuft man'
     })
   }).then(r => r.json())
 

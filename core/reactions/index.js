@@ -14,6 +14,13 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  function byReview(id) {
+    return services.data.query({
+      type: 'reaction',
+      reviewId: id
+    })
+  }
+
   // function put(id, reaction) {
   //   return Async.of(reaction)
   //     .map(assoc('id', id))
@@ -28,7 +35,8 @@ module.exports = (services) => {
   // }
 
   return {
-    post
+    post,
+    byReview
     // put,
     // get
   }

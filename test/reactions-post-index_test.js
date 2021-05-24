@@ -24,7 +24,8 @@ test('POST /api/reactions successfully', async t => {
       {
         id: "reaction-ghostbusters-1-tom", 
         reviewId: "ghostbusters-1-tom", 
-        reaction: "like"
+        reaction: "like",
+        user: 'staypuft man'
     })
   }).then(r => r.json())
 
