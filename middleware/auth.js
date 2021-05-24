@@ -1,15 +1,13 @@
 const {not, isNil, find, includes} = require('ramda')
 
 const endpoints = [
-  //{method: "GET", path: "/api/reviews"},
+    //{method: "GET", path: "/api/reviews"},
     {method: "POST", path: "/api/movies"},
     {method: "PUT", path: "/api/movies"},
     {method: "DELETE", path: "/api/movies"},
-  
     {method: "POST", path: "/api/reviews"},
     {method: "PUT", path: "/api/reviews"},
     {method: "DELETE", path: "/api/reviews"},
-  
     {method: "POST", path: "/api/reactions"}
 ]
 

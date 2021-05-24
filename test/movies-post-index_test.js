@@ -13,9 +13,12 @@ test('POST /api/movies successfully', async t => {
 
   const result = await fetch(server.url + '/api/movies', {
     method: 'POST',
+
     headers: {
       'Content-Type': 'application/json',
       /*Authorization: `Bearer ${token}`*/
+      'Cookie' : 'session=foobar'
+
     },
     body: JSON.stringify({
       title: 'Ghostbusters',

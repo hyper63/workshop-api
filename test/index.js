@@ -1,4 +1,6 @@
+require('dotenv').config()
 const fetchMock = require('fetch-mock')
+
 
 // Mocks
 globalThis.fetch = fetchMock.sandbox()
