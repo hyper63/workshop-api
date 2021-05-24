@@ -9,6 +9,7 @@ if (!globalThis.fetch) {
 }
 
 const core = require('./middleware/core')
+const auth = require('./middleware/auth')
 
 // AUTH api endpoints
 const login = require('./api/auth/login')
@@ -34,6 +35,7 @@ app.use(cors())
 app.use(express.json())
 app.use(core)
 
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -41,6 +43,8 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: 'auto' }
 }))
+
+app.use(auth)
 
 // movies
 app.post('/api/movies', postMovie)
