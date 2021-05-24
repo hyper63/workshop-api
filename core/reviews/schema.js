@@ -28,8 +28,22 @@ function validate (review) {
     : Left(formatErrors(error))
   ).chain(eitherToAsync)
 } 
+
+function validateUserIsAuthor({review, user}) {
+  return Async.of(review)
+  .map( ({author}) => user === author 
+  ? Right(review)
+  : Left({
+    status: 400,
+    message: `Current logged in user: ${user} is not the author of review.`
+  }) )
+
+
+
+}
  
 module.exports = {
   validate,
+  validateUserIsAuthor,
   schema
 }

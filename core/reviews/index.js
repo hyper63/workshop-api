@@ -1,4 +1,4 @@
-const { validate } = require('./schema')
+const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
 const { assoc, identity } = require('ramda')
 const { Async } = require('crocks')
@@ -42,12 +42,50 @@ module.exports = (services) => {
     }).chain(verify)
   }
 
+
+  function del({id, user}) {
+
+    console.log('>>>>>>>>>>>>>>>>>')
+    console.log('>>>>>>>>>>>>>>>>>')
+    console.log('core reviews index.js del', {id, user})
+
+    const review = get(id)
+
+    console.log('review: ', review)
+
+    const {author} = review
+    console.log('author: ', author)
+
+    return services.data.get(id).chain(validateUserIsAuthor)
+
+    // if (author != user) {
+
+    //   return {status: 400, message: `Current logged in user: ${user} is not the author of review.`}
+
+
+    // }
+
+    /* delete review 
+    TODO:  Get the review by id
+    TODO:  Get the author prop off the review
+    
+
+    NOTE: Only the author of the review can remove the review
+    NOTE: the business logic should cascade and remove all reactions to a given review
+  */
+
+    
+  }
+
+  
+
   return {
     post,
     put,
     get,
     byMovie,
-    byUser 
+    byUser,
+    del
   }
 }
 
