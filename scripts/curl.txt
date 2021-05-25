@@ -1,39 +1,57 @@
 ***** ROADHOUSE ******
 
-
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse", "title": "Road House","year": "1992","actors": ["Swayze"],"genre": "action"}'
 
 
 // review
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-5-roadhouse-1","movieId": "roadhouse-1","rating": 5,"summary": "So bad, its good","author": "Ott"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-10-roadhouse","movieId": "roadhouse","rating": 5,"summary": "So bad, its good","author": "Ott"}'
 
 
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-6-roadhouse-1","movieId": "roadhouse-1","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-20-roadhouse","movieId": "roadhouse","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
 
 // reaction
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Arnold"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1", "reviewId": "review-10-roadhouse", "reaction": "like", "user": "Arnold"}'
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Tom W"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2", "reviewId": "review-10-roadhouse", "reaction": "like", "user": "Tom W"}'
  
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-5-roadhouse-1", "reviewId": "review-5-roadhouse-1", "reaction": "like", "user": "Jeff"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3", "reviewId": "review-20-roadhouse", "reaction": "like", "user": "Jeff"}'
 
 
 
 
 ***** COMMANDO ****
 // movie
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando-1", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action"}'
 
 // review
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-commando-1","movieId": "commando-1","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-commando-1","movieId": "commando","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
 
 
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-2-commando-1","movieId": "commando-1","rating": 1,"summary": "So bad, I threw up in my mouth","author": "Ott"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-2-commando-1","movieId": "commando","rating": 1,"summary": "So bad, I threw up in my mouth","author": "Ott"}'
 
 // reaction
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Arnold"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Arnold"}'
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Tom W"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Tom W"}'
  
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-2-commando-1", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Jeff"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Jeff"}'
+
+
+***** True Lies ****
+// movie
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "truelies", "title": "true lies","year": "1992","actors": ["Arnold"],"genre": "action"}'
+
+// review
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-truelies","movieId": "truelies","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-2-truelies","movieId": "truelies","rating": 1,"summary": "So bad, I threw up in my mouth","author": "Ott"}'
+
+// reaction
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4", "reviewId": "review-2-truelies", "reaction": "like", "user": "Arnold"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5", "reviewId": "review-2-truelies", "reaction": "like", "user": "Tom W"}'
+ 
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-6", "reviewId": "review-2-truelies", "reaction": "like", "user": "Jeff"}'

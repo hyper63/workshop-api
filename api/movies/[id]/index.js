@@ -17,4 +17,19 @@ exports.get = async ({core, params}, res, next) => {
     }
   
   }
+
+  exports.del = async ({core, user, params}, res, next) => {
+    const {id} = params 
+    console.log(`movies.${id}.del request`)
+
+    // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
+    //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
+    try {
+      const result = await core.movies.del(id).toPromise()
+      res.json(result)
+    } catch (err) {
+      next(err)
+    }
+
+  }
   
