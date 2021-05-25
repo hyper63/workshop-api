@@ -34,7 +34,7 @@ module.exports = (services) => {
   function byMovie(id) {
     return services.data.query({
       type: 'review',
-      movie: id 
+      movieId: id 
     }).chain(verify)
   }
 

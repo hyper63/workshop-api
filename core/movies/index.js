@@ -1,8 +1,9 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity } = require('ramda')
+const { assoc, identity, prop, map } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
+const reviews = require('../reviews/index')
 
 module.exports = (services) => {
   function post(movie) {
@@ -49,10 +50,27 @@ module.exports = (services) => {
 
   }
 
+
+  function del(id) {
+    return services.data.get(id)
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
+    .chain(review => reviews(services).byMovie(id))    
+    .chain(verify)
+    .map(prop('docs'))
+    .chain(movieReviews => Async.all(
+      map(({id, author}) => reviews(services).del({id, user: author}) , movieReviews)
+    ))
+    .chain(results => Async.all(map(verify, results)))
+    .chain( _ => services.data.del(id))
+    .chain(verify)
+  }
+
   return {
     post,
     put,
     get,
+    del,
     search
   }
 }

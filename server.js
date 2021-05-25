@@ -47,14 +47,14 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
-app.use(auth.check)
+//app.use(auth.check)
 
 // movies
 app.post('/api/movies', movies.post)
 app.post('/api/movies/_search', movies.search)
 app.put('/api/movies/:id', movie.put)
 app.get('/api/movies/:id', movie.get)
-app.delete('/api/movies/:id', noop)
+app.delete('/api/movies/:id', movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 
 // reviews
