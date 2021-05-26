@@ -1,10 +1,39 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
-const verifyIndexCreate = require('../lib/verify-index-create')
-const { assoc, identity, prop, map } = require('ramda')
+//const verifyIndexCreate = require('../lib/verify-index-create')
+const { assoc, identity, prop, map, propEq, pipe, head, last, any, all } = require('ramda')
 const { Async } = require('crocks')
+const {Rejected, Resolved} = Async
 const cuid = require('cuid')
 const reviews = require('../reviews/index')
+
+const isOK = propEq('ok', true)
+const allOK = all(isOK)
+
+/*
+const isNotOK = propEq('ok', false);
+const allNotOK = all(isNotOK);
+const anyNotOK = any(isNotOK)
+const indexSaveNotOK = pipe(last, isNotOK)
+const dataSaveNotOK = pipe(head, isNotOK)
+*/
+
+const handleResults = results => allOK(results) ? Resolved({ ok: true })
+: Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
+
+/* data fail, search pass
+  [
+    {
+      ok: false,
+      status: 500,
+      message: '{"error":"conflict","reason":"Document update conflict."}'
+    },
+    { ok: true }
+  ]
+  all pass
+  [ { ok: true, id: 'caddyshack2' }, { ok: true } ] */
+
+
 
 module.exports = (services) => {
   function post(movie) {
@@ -12,12 +41,29 @@ module.exports = (services) => {
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(services.data.create)
+      .chain(addMovie)
+      .chain(handleResults)
       .chain(verify)
-      .chain(addMovieToIndex)
-      .chain(verify)
+      
   }
 
+  function addMovie (movie) {
+      return Async.all( [
+        services.data.create(movie),
+        addMovieToIndex(movie)
+      ])
+  }
+
+  // function post(movie) {
+  //   return Async.of(movie)
+  //     .map(createId)
+  //     .chain(validate)
+  //     .map(assoc('type', 'movie'))
+  //     .chain(services.data.create)
+  //     .chain(verify)
+  //     .chain(addMovieToIndex)
+  //     .chain(verify)
+  // }
 
   // function post(movie) {
   //   return Async.of(movie) 
@@ -35,8 +81,7 @@ module.exports = (services) => {
       .map(assoc('type', 'movie'))
       .chain(movie => services.data.update(id, movie))
       .chain(verify)
-      .chain(addMovieToIndex)
-      .chain(verify)
+     
   }
 
   function get(id) {
@@ -79,8 +124,7 @@ module.exports = (services) => {
     .chain(results => Async.all(map(verify, results)))
     .chain( _ => services.data.del(id))
     .chain(verify)
-    .chain(addMovieToIndex)
-    .chain(verify)
+
   }
 
   function addMovieToIndex (movie) {
