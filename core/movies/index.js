@@ -35,6 +35,8 @@ module.exports = (services) => {
       .map(assoc('type', 'movie'))
       .chain(movie => services.data.update(id, movie))
       .chain(verify)
+      .chain(addMovieToIndex)
+      .chain(verify)
   }
 
   function get(id) {
@@ -77,24 +79,13 @@ module.exports = (services) => {
     .chain(results => Async.all(map(verify, results)))
     .chain( _ => services.data.del(id))
     .chain(verify)
+    .chain(addMovieToIndex)
+    .chain(verify)
   }
 
   function addMovieToIndex (movie) {
-    const name = "movies"
-    const fields = ["title","year"]
-    const storeFields = ["id", "title", "year", "actors", "genre"]
-  
     const key = `${movie.title}-${movie.year}`
-
-
-    console.log('core movies index.js addMovieToIndex: ')
-
-
-
-    return services.search.createIndex(name, fields, storeFields)
-    .chain(verifyIndexCreate)
-    .chain(_ => services.search.create(name, key, movie ))
-
+    return services.search.create(key, movie)
   }
   
 

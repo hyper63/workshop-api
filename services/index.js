@@ -142,7 +142,7 @@ function createSearchIndex(name, fields, storeFields) {
 
 }
 
-function addDocumentToIndex(name, key, doc) {
+function addDocumentToIndex(key, doc) {
 
   console.log('services addDocumentToIndex')
   return asyncFetch(hyper.url('search'), {
