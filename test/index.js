@@ -1,5 +1,4 @@
 require('dotenv').config()
-require('./setup')()
 const fetchMock = require('fetch-mock')
 
 
@@ -12,6 +11,8 @@ globalThis.fetch = fetchMock.sandbox()
   .post('https://dev.hyper63.com/search/twilson63/_query', { status: 200, body: {ok: true, matches: []}})
 
 
+// stub auth
+require('./setup')()
 
 // Tests
 
@@ -24,4 +25,12 @@ require('./reviews-by-user_test.js')
 require('./movies-search_test.js')
 require('./reactions-post-index_test.js')
 require('./reactions-by-review_test.js')
+require('./auth_test.js')
+
+
+// unit tests
+require('./auth_test.js')
+
+
+
 
