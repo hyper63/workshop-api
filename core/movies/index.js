@@ -1,7 +1,6 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
-//const verifyIndexCreate = require('../lib/verify-index-create')
-const { assoc, identity, prop, map, propEq, pipe, head, last, any, all } = require('ramda')
+const { assoc, identity, prop, map, propEq, propOr, all, head } = require('ramda')
 const { Async } = require('crocks')
 const {Rejected, Resolved} = Async
 const cuid = require('cuid')
@@ -9,14 +8,8 @@ const reviews = require('../reviews/index')
 
 const isOK = propEq('ok', true)
 const allOK = all(isOK)
+const dataResult = head
 
-/*
-const isNotOK = propEq('ok', false);
-const allNotOK = all(isNotOK);
-const anyNotOK = any(isNotOK)
-const indexSaveNotOK = pipe(last, isNotOK)
-const dataSaveNotOK = pipe(head, isNotOK)
-*/
 
 const handleResults = results => allOK(results) ? Resolved({ ok: true })
 : Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
@@ -28,6 +21,7 @@ const handleResults = results => allOK(results) ? Resolved({ ok: true })
       status: 500,
       message: '{"error":"conflict","reason":"Document update conflict."}'
     },
+    
     { ok: true }
   ]
   all pass
@@ -53,26 +47,6 @@ module.exports = (services) => {
         addMovieToIndex(movie)
       ])
   }
-
-  // function post(movie) {
-  //   return Async.of(movie)
-  //     .map(createId)
-  //     .chain(validate)
-  //     .map(assoc('type', 'movie'))
-  //     .chain(services.data.create)
-  //     .chain(verify)
-  //     .chain(addMovieToIndex)
-  //     .chain(verify)
-  // }
-
-  // function post(movie) {
-  //   return Async.of(movie) 
-  //     .map(createId)
-  //     .chain(validate)
-  //     .map(assoc('type', 'movie'))
-  //     .chain(services.data.create)
-  //     .chain(verify)
-  // }
 
   function put(id, movie) {
     return Async.of(movie)
