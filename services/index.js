@@ -1,6 +1,6 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
-const { always, assoc, over, lensProp, inc } = require('ramda')
+const { always, assoc, compose, over, lensProp, inc } = require('ramda')
 
 if (!globalThis.fetch) {
   throw new Error('fetch is not defined')
@@ -47,14 +47,15 @@ function list() {
   }).chain(toJSON)
 }
 
-function increment(id) {
+function increment(id, prop) {
   return getFromCache(id)
-    .map(v => (console.log(v), v))
     .coalesce(
-      always({count: 1}),
-      over(lensProp('count'), inc)
+      always({count: 1, [prop]: 1}),
+      compose(
+        over(lensProp('count'), inc),
+        over(lensProp(prop), inc)
+      )
     )
-    .map(v => (console.log(v), v))
     .chain(v => set(id, v))
 }
 

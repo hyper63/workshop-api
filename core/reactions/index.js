@@ -1,6 +1,5 @@
 const { validate } = require('./schema')
-const verify = require('../lib/verify')
-const { assoc, identity } = require('ramda')
+const { all, assoc, propEq, identity } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 
@@ -12,9 +11,11 @@ module.exports = (services) => {
       .map(assoc('type', 'reaction'))
       .chain(reaction => Async.all([
         services.data.create(reaction),
-        services.cache.inc(`review-${reaction.reviewId}`)
+        services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction)
       ]))
-      //.chain(verify)      
+      .map(all(propEq('ok', true)))
+      .map(ok => ({ok}))
+
   }
 
   function byReview(id) {
