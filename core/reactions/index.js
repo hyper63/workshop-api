@@ -10,8 +10,11 @@ module.exports = (services) => {
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'reaction'))
-      .chain(services.data.create)
-      .chain(verify)
+      .chain(reaction => Async.all([
+        services.data.create(reaction),
+        services.cache.inc(`review-${reaction.reviewId}`)
+      ]))
+      //.chain(verify)      
   }
 
   function byReview(id) {

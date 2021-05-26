@@ -1,6 +1,6 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
-const { assoc } = require('ramda')
+const { always, assoc, over, lensProp, inc } = require('ramda')
 
 if (!globalThis.fetch) {
   throw new Error('fetch is not defined')
@@ -29,11 +29,55 @@ module.exports = {
     query: find
   },
   cache: {
-
+    inc: increment,
+    set,
+    get: getFromCache,
+    list
   },
   storage: {
 
   }
+}
+
+function list() {
+  return asyncFetch(hyper.url('cache', '_query') + '?pattern=*', {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
+}
+
+function increment(id) {
+  return getFromCache(id)
+    .map(v => (console.log(v), v))
+    .coalesce(
+      always({count: 1}),
+      over(lensProp('count'), inc)
+    )
+    .map(v => (console.log(v), v))
+    .chain(v => set(id, v))
+}
+
+function set(key, value) {
+  return asyncFetch(hyper.url('cache'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({
+      key,
+      value
+    })
+  }).chain(toJSON)
+}
+
+function getFromCache(key) {
+  return asyncFetch(hyper.url('cache', key), {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
 }
 
 /**
