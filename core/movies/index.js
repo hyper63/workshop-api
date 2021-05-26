@@ -1,5 +1,6 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
+const verifyIndexCreate = require('../lib/verify-index-create')
 const { assoc, identity, prop, map } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
@@ -7,13 +8,25 @@ const reviews = require('../reviews/index')
 
 module.exports = (services) => {
   function post(movie) {
-    return Async.of(movie) 
+    return Async.of(movie)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'movie'))
       .chain(services.data.create)
       .chain(verify)
+      .chain(addMovieToIndex)
+      .chain(verify)
   }
+
+
+  // function post(movie) {
+  //   return Async.of(movie) 
+  //     .map(createId)
+  //     .chain(validate)
+  //     .map(assoc('type', 'movie'))
+  //     .chain(services.data.create)
+  //     .chain(verify)
+  // }
 
   function put(id, movie) {
     return Async.of(movie)
@@ -66,6 +79,25 @@ module.exports = (services) => {
     .chain(verify)
   }
 
+  function addMovieToIndex (movie) {
+    const name = "movies"
+    const fields = ["title","year"]
+    const storeFields = ["id", "title", "year", "actors", "genre"]
+  
+    const key = `${movie.title}-${movie.year}`
+
+
+    console.log('core movies index.js addMovieToIndex: ')
+
+
+
+    return services.search.createIndex(name, fields, storeFields)
+    .chain(verifyIndexCreate)
+    .chain(_ => services.search.create(name, key, movie ))
+
+  }
+  
+
   return {
     post,
     put,
@@ -74,6 +106,8 @@ module.exports = (services) => {
     search
   }
 }
+
+
 
 
 function createId(movie) {

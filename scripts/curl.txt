@@ -1,3 +1,15 @@
+*** Caddyshack ***
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield"],"genre": "comedy"}'
+
+*** Breakfast Club ***
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "breakfastclub", "title": "Breakfast Club","year": "1985","actors": ["Ringwold"],"genre": "comedy"}'
+
+*** St. Elmos Fire ***
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "stelmosfire", "title": "St. Elmos Fire","year": "1986","actors": ["Lowe", "Moore"],"genre": "comedy"}'
+
+
+
 ***** ROADHOUSE ******
 
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse", "title": "Road House","year": "1992","actors": ["Swayze"],"genre": "action"}'
