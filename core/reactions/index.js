@@ -2,6 +2,7 @@ const { validate } = require('./schema')
 const { all, always, assoc, propEq, identity } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
+const verify = require('../lib/verify')
 
 module.exports = (services) => {
   function post(reaction) {
@@ -9,20 +10,12 @@ module.exports = (services) => {
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'reaction'))
-      .chain(reaction => Async.all([
-        services.data.create(reaction),
-        services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction)
-      ])
-        .map(all(propEq('ok', true)))
-        .chain(ok => ok
-          ? Async.Resolved({ ok })
-          : Async.Rejected({ ok: false, status: 500, message: 'Error occured trying to save reaction' })
-        ) // if error remove reaction and send error
-        .bichain(
-          (err) => services.data.del(reaction.id).map(always(err)),
-          Async.Resolved
-        )
+      .chain(reaction =>
+        services.data.create(reaction)
+          .chain(() => services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction))
+          .map(({ ok }) => ({ ok, id: reaction.id }))
       )
+      .chain(verify)
 
 
 

@@ -8,7 +8,7 @@ if (!globalThis.fetch) {
 
 const asyncFetch = Async.fromPromise(fetch)
 const toJSON = res => {
-
+  // Response will only be ok if status is between 200 - 299
   if (res.ok) {
     return Async.fromPromise(res.json.bind(res))()
   } else {
@@ -50,7 +50,7 @@ function list() {
 function increment(id, prop) {
   return getFromCache(id)
     .coalesce(
-      always({count: 1, [prop]: 1}),
+      always({ count: 1, [prop]: 1 }),
       compose(
         over(lensProp('count'), inc),
         over(lensProp(prop), inc)
@@ -154,12 +154,12 @@ function get(id) {
 }
 
 function del(id) {
-  return asyncFetch(hyper.url('data', id ), {
-      method: 'DELETE',
-       headers: { 
-          Authorization: `Bearer ${hyper.token()}`,
-          Accept: 'application/json'
-  }
+  return asyncFetch(hyper.url('data', id), {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`,
+      Accept: 'application/json'
+    }
   }).chain(toJSON)
 }
 
