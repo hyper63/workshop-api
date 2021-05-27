@@ -1,76 +1,11 @@
 const { validate, validateCriteria } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map, propEq, propOr, all, head } = require('ramda')
+const { assoc, identity, prop, map} = require('ramda')
 const { Async } = require('crocks')
-const {Rejected, Resolved} = Async
 const cuid = require('cuid')
 const reviews = require('../reviews/index')
 
-const isOK = propEq('ok', true)
-const allOK = all(isOK)
-const isNotOK = propEq('ok', false);
-const allNotOK = all(isNotOK);
-
-
-// const dataResult = head
-
-// const handleResultsORIG = results => allOK(results) ? Resolved({ ok: true })
-// : Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
-
-
-// function handleResults (results) {
-
-//   if (allOK(results)) {
-//       return Resolved({ ok: true })
-//   } else if (allNotOK(results)) {
-//       return Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
-//   } else if () {
-
-//   } else {
-
-
-//   }
-//   return
-// } 
-
-
-
-/* data fail, search pass
-  [
-    {
-      ok: false,
-      status: 500,
-      message: '{"error":"conflict","reason":"Document update conflict."}'
-    },
-    { ok: true }
-  ]
-  all pass
-  [ { ok: true, id: 'caddyshack2' }, { ok: true } ] */
-
-/*
-  
-
-
-*/
 module.exports = (services) => {
-
-  // function post(movie) {
-  //   return Async.of(movie)
-  //     .map(createId)
-  //     .chain(validate)
-  //     .map(assoc('type', 'movie'))
-  //     .chain(movie => services.data.create(movie)
-  //       .chain(() => addMovieToIndex(movie))
-  //       // if unable to add movie to index then rollback create reaction
-  //       .bichain(
-  //         () => services.data.del(movie.id).chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not add movie' })),
-  //         Resolved
-  //       )
-  //       .map(({ ok }) => ({ ok, id: movie.id }))
-        
-  //     )
-  //     .chain(verify)
-  // }
 
   function post(movie) {
     return Async.of(movie)
@@ -84,8 +19,6 @@ module.exports = (services) => {
           .map(({ ok }) => ({ ok, id: movie.id }))
         )
         .chain(verify)
-
-       
   }
 
   function rollback(data, id) {
@@ -95,25 +28,6 @@ module.exports = (services) => {
     }
   }
   
-    // function post(reaction) {
-    //   return Async.of(reaction)
-    //     .map(createId)
-    //     .chain(validate)
-    //     .map(assoc('type', 'reaction'))
-    //     .chain(reaction =>
-    //       services.data.create(reaction)
-    //         .chain(() => services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction))
-    //         .bichain(rollback(services.data, reaction.id), Async.Resolved)
-    //         .map(({ ok }) => ({ ok, id: reaction.id }))
-    //     )
-    //     .chain(verify)
-    // }
-
-
-  function addMovieToDB (movie) {
-      return services.data.create(movie)
-  }
-
   function addMovieToIndex (movie) {
     const key = `${movie.title}-${movie.year}`
     return services.search.create(key, movie)
