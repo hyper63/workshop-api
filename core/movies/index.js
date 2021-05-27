@@ -23,10 +23,18 @@ module.exports = (services) => {
 
   function rollback(data, id) {
     return function () {
-      return data.del(reaction.id)
-        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not increment cache' }))
+      return data.del(id)
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not add to search index' }))
     }
   }
+
+  function rollbackUpdate(dataService, id, origData) {
+    return function () {
+      return dataService.update(id, origData)
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not update search index' }))
+    }
+  }
+  
   
   function addMovieToIndex (movie) {
     const key = `${movie.title}-${movie.year}`
@@ -34,12 +42,21 @@ module.exports = (services) => {
   }
   
   function put(id, movie) {
+
+    console.log({id, movie})
     return Async.of(movie)
       .map(assoc('id', id))
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(movie => services.data.update(id, movie))
-      .chain(verify)
+      .chain(movie => 
+        get(id).chain(origMovie => 
+          services.data.update(id, movie)
+          .chain(() => addMovieToIndex(movie))
+          .bichain(rollbackUpdate(services.data, id ,origMovie), Async.Resolved)
+          .map(({ ok }) => ({ ok, id: movie.id }))
+          )
+      )
+        .chain(verify)
   }
 
   function get(id) {
