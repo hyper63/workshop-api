@@ -14,6 +14,7 @@ const toJSON = res => {
   } else {
     return Async.fromPromise(res.text.bind(res))()
       .map(msg => ({ ok: false, status: res.status, message: msg }))
+      .chain(Async.Rejected)
   }
 }
 
