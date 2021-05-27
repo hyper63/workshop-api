@@ -59,17 +59,6 @@ module.exports = (services) => {
   //     .map(createId)
   //     .chain(validate)
   //     .map(assoc('type', 'movie'))
-  //     .chain(addMovieToDB)
-  //     .chain(addMovieToIndex)
-  //     .chain(handleResults)
-  //     .chain(verify)
-  // }
-
-  // function post(movie) {
-  //   return Async.of(movie)
-  //     .map(createId)
-  //     .chain(validate)
-  //     .map(assoc('type', 'movie'))
   //     .chain(movie => services.data.create(movie)
   //       .chain(() => addMovieToIndex(movie))
   //       // if unable to add movie to index then rollback create reaction
@@ -84,50 +73,52 @@ module.exports = (services) => {
   // }
 
   function post(movie) {
-
-    console.log ('post movie: ', movie)
     return Async.of(movie)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(movie => addMovieToDB(movie)
+      .chain(movie => 
+        services.data.create(movie)
+          .chain(() => addMovieToIndex(movie))
+          .bichain(rollback(services.data, movie.id), Async.Resolved)
+          .map(({ ok }) => ({ ok, id: movie.id }))
+        )
         .chain(verify)
-        .bichain(
-          //(result) => Rejected({ok: false, status: result.status, message: result.message, foo: "bar" }),
-          (result) => Rejected(result),
-          (result) => {
-            console.log('addMovieToDB verify result: ', result)
-            console.log('about to addMovieToIndex', 'movie: ', movie)
-            return addMovieToIndex(movie)
-            .chain(verify)
-            .bichain(
-              () => services.data.del(movie.id),
-              (result) => Resolved(result)
-            )
-        }
-      )
-      )
-      .chain(verify)
+
+       
   }
+
+  function rollback(data, id) {
+    return function () {
+      return data.del(reaction.id)
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not increment cache' }))
+    }
+  }
+  
+    // function post(reaction) {
+    //   return Async.of(reaction)
+    //     .map(createId)
+    //     .chain(validate)
+    //     .map(assoc('type', 'reaction'))
+    //     .chain(reaction =>
+    //       services.data.create(reaction)
+    //         .chain(() => services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction))
+    //         .bichain(rollback(services.data, reaction.id), Async.Resolved)
+    //         .map(({ ok }) => ({ ok, id: reaction.id }))
+    //     )
+    //     .chain(verify)
+    // }
+
 
   function addMovieToDB (movie) {
       return services.data.create(movie)
   }
 
-  // function addMovie (movie) {
-  //     return Async.all( [
-  //       services.data.create(movie),
-  //       addMovieToIndex(movie)
-  //     ])
-  // }
-
   function addMovieToIndex (movie) {
-    console.log('inside addMovieToIndex movie: ', movie)
     const key = `${movie.title}-${movie.year}`
     return services.search.create(key, movie)
   }
   
-
   function put(id, movie) {
     return Async.of(movie)
       .map(assoc('id', id))
@@ -135,7 +126,6 @@ module.exports = (services) => {
       .map(assoc('type', 'movie'))
       .chain(movie => services.data.update(id, movie))
       .chain(verify)
-     
   }
 
   function get(id) {
