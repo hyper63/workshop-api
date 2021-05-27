@@ -13,22 +13,20 @@ test('POST /api/reactions successfully', async t => {
 
   const result = await fetch(server.url + '/api/reactions', {
     method: 'POST',
-
     headers: {
       'Content-Type': 'application/json',
       /*Authorization: `Bearer ${token}`*/
-      'Cookie' : 'session=foobar'
 
     },
     body: JSON.stringify(
       {
-        id: "reaction-ghostbusters-1-tom", 
-        reviewId: "ghostbusters-1-tom", 
+        id: "reaction-ghostbusters-1-tom",
+        reviewId: "ghostbusters-1-tom",
         reaction: "like",
-        user: 'staypuft man'
-    })
+        user: 'statepuff marshmello man'
+      })
   }).then(r => r.json())
-
+  console.log(result)
   t.ok(result.ok)
 
   server.close()

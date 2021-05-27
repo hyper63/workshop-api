@@ -9,6 +9,8 @@ globalThis.fetch = fetchMock.sandbox()
   .put('https://dev.hyper63.com/data/twilson63/movie-1', { status: 200, body: {ok: true }})
   .post('https://dev.hyper63.com/data/twilson63/_query', { status: 200, body: {ok: true, docs: []}})
   .post('https://dev.hyper63.com/search/twilson63/_query', { status: 200, body: {ok: true, matches: []}})
+  .post('https://dev.hyper63.com/cache/twilson63', { status: 201, body: {ok: true}})
+  .get('https://dev.hyper63.com/cache/twilson63/review-ghostbusters-1-tom', { status: 200, body: { count: 1, like: 1}})
 
 
 // stub auth

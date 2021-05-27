@@ -17,7 +17,12 @@ const schema = z.object({
   movieId: z.string(),
   rating: z.number().int().min(1).max(5),
   summary: z.string(),
-  author: z.string()
+  author: z.string(),
+  counts: z.object({
+    count: z.number(),
+    like: z.number().optional(),
+    dislike: z.number().optional()
+  }).optional()
 })
 
 function validate (review) {
