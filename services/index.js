@@ -28,8 +28,8 @@ module.exports = {
   search: {
     query: find,
     createIndex: createSearchIndex,
-    create: addDocumentToIndex
-
+    create: addDocumentToIndex,
+    del: removeDocumentFromIndex
   },
   cache: {
 
@@ -143,8 +143,6 @@ function createSearchIndex(name, fields, storeFields) {
 }
 
 function addDocumentToIndex(key, doc) {
-
-  console.log('services addDocumentToIndex')
   return asyncFetch(hyper.url('search'), {
     method: 'POST',
     headers: {
@@ -153,7 +151,16 @@ function addDocumentToIndex(key, doc) {
     },
     body: JSON.stringify({key,doc})
   }).chain(toJSON)
+}
 
-
+function removeDocumentFromIndex(key) {
+  console.log('services removeDocumentFromIndex')
+  return asyncFetch(hyper.url('search', key), {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
 }
 

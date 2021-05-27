@@ -15,15 +15,15 @@ module.exports = (services) => {
       .chain(movie => 
         services.data.create(movie)
           .chain(() => addMovieToIndex(movie))
-          .bichain(rollback(services.data, movie.id), Async.Resolved)
+          .bichain(rollbackAdd(services.data, movie.id), Async.Resolved)
           .map(({ ok }) => ({ ok, id: movie.id }))
         )
         .chain(verify)
   }
 
-  function rollback(data, id) {
+  function rollbackAdd(dataService, id) {
     return function () {
-      return data.del(id)
+      return dataService.del(id)
         .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not add to search index' }))
     }
   }
@@ -42,8 +42,6 @@ module.exports = (services) => {
   }
   
   function put(id, movie) {
-
-    console.log({id, movie})
     return Async.of(movie)
       .map(assoc('id', id))
       .chain(validate)
@@ -84,18 +82,43 @@ module.exports = (services) => {
       .chain(verify)
   }
 
+  function deleteMovieFromIndex (movie) {
+    const key = `${movie.title}-${movie.year}`
+    return services.search.del(key)
+  }
+
+  function rollbackDelete(dataService, id, origMovie, origMovieReviews) {
+    return function () {
+      return Async.all(
+        map((review) => reviews(services).post(review) , origMovieReviews)
+      )
+        .chain( _ => services.data.post(origMovie)
+          .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
+        )
+    }
+  }
+
   function del(id) {
     return services.data.get(id)
     .chain(validate)
     .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
-    .chain(review => reviews(services).byMovie(id))    
-    .chain(verify)
-    .map(prop('docs'))
-    .chain(movieReviews => Async.all(
-      map(({id, author}) => reviews(services).del({id, user: author}) , movieReviews)
-    ))
-    .chain(results => Async.all(map(verify, results)))
-    .chain( _ => services.data.del(id))
+    .chain(origMovie => reviews(services).byMovie(id)
+      .chain(verify)
+      .map(prop('docs'))
+      .chain(origMovieReviews => Async.all(
+          map(({id, author}) => reviews(services).del({id, user: author}) , origMovieReviews)
+        )
+        .chain(results => Async.all(map(verify, results))
+          .chain( _ => services.data.del(id)
+              .chain(() => deleteMovieFromIndex(origMovie))
+              .bichain(rollbackDelete(services.data, id ,origMovie, origMovieReviews), Async.Resolved)
+              .map(({ ok }) => ({ ok, id: origMovie.id }))
+            )
+        )
+      )
+    )    
+    
+    
     .chain(verify)
 
   }
