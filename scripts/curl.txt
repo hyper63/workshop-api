@@ -1,3 +1,11 @@
+{
+  title: z.string().optional(),
+  year: z.string().optional(),
+  genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance']).optional()
+}
+
+curl -X POST http://localhost:3000/api/movies/_search -H 'Content-Type: application/json' -d '{"title": "Caddyshack","year": "1980", "genre": "comedy"}'
+
 *** Caddyshack ***
 
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield"],"genre": "comedy"}'

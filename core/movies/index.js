@@ -8,11 +8,32 @@ const reviews = require('../reviews/index')
 
 const isOK = propEq('ok', true)
 const allOK = all(isOK)
-const dataResult = head
+const isNotOK = propEq('ok', false);
+const allNotOK = all(isNotOK);
 
 
-const handleResults = results => allOK(results) ? Resolved({ ok: true })
-: Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
+// const dataResult = head
+
+// const handleResultsORIG = results => allOK(results) ? Resolved({ ok: true })
+// : Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
+
+
+// function handleResults (results) {
+
+//   if (allOK(results)) {
+//       return Resolved({ ok: true })
+//   } else if (allNotOK(results)) {
+//       return Rejected({ok: false, status: propOr( 400, "status" ,dataResult(results)), message: propOr( "Error saving data","message" ,dataResult(results)) })
+//   } else if () {
+
+//   } else {
+
+
+//   }
+//   return
+// } 
+
+
 
 /* data fail, search pass
   [
@@ -21,32 +42,91 @@ const handleResults = results => allOK(results) ? Resolved({ ok: true })
       status: 500,
       message: '{"error":"conflict","reason":"Document update conflict."}'
     },
-    
     { ok: true }
   ]
   all pass
   [ { ok: true, id: 'caddyshack2' }, { ok: true } ] */
 
+/*
+  
 
 
+*/
 module.exports = (services) => {
+
+  // function post(movie) {
+  //   return Async.of(movie)
+  //     .map(createId)
+  //     .chain(validate)
+  //     .map(assoc('type', 'movie'))
+  //     .chain(addMovieToDB)
+  //     .chain(addMovieToIndex)
+  //     .chain(handleResults)
+  //     .chain(verify)
+  // }
+
+  // function post(movie) {
+  //   return Async.of(movie)
+  //     .map(createId)
+  //     .chain(validate)
+  //     .map(assoc('type', 'movie'))
+  //     .chain(movie => services.data.create(movie)
+  //       .chain(() => addMovieToIndex(movie))
+  //       // if unable to add movie to index then rollback create reaction
+  //       .bichain(
+  //         () => services.data.del(movie.id).chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not add movie' })),
+  //         Resolved
+  //       )
+  //       .map(({ ok }) => ({ ok, id: movie.id }))
+        
+  //     )
+  //     .chain(verify)
+  // }
+
   function post(movie) {
+
+    console.log ('post movie: ', movie)
     return Async.of(movie)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(addMovie)
-      .chain(handleResults)
+      .chain(movie => addMovieToDB(movie)
+        .chain(verify)
+        .bichain(
+          //(result) => Rejected({ok: false, status: result.status, message: result.message, foo: "bar" }),
+          (result) => Rejected(result),
+          (result) => {
+            console.log('addMovieToDB verify result: ', result)
+            console.log('about to addMovieToIndex', 'movie: ', movie)
+            return addMovieToIndex(movie)
+            .chain(verify)
+            .bichain(
+              () => services.data.del(movie.id),
+              (result) => Resolved(result)
+            )
+        }
+      )
+      )
       .chain(verify)
-      
   }
 
-  function addMovie (movie) {
-      return Async.all( [
-        services.data.create(movie),
-        addMovieToIndex(movie)
-      ])
+  function addMovieToDB (movie) {
+      return services.data.create(movie)
   }
+
+  // function addMovie (movie) {
+  //     return Async.all( [
+  //       services.data.create(movie),
+  //       addMovieToIndex(movie)
+  //     ])
+  // }
+
+  function addMovieToIndex (movie) {
+    console.log('inside addMovieToIndex movie: ', movie)
+    const key = `${movie.title}-${movie.year}`
+    return services.search.create(key, movie)
+  }
+  
 
   function put(id, movie) {
     return Async.of(movie)
@@ -76,14 +156,12 @@ module.exports = (services) => {
       .chain(doc => 
         services.search.query(
             doc.query, 
-            ['title', 'year', 'genre'], 
+            null, 
             doc.filter
         )
       )
       .chain(verify)
-
   }
-
 
   function del(id) {
     return services.data.get(id)
@@ -100,12 +178,6 @@ module.exports = (services) => {
     .chain(verify)
 
   }
-
-  function addMovieToIndex (movie) {
-    const key = `${movie.title}-${movie.year}`
-    return services.search.create(key, movie)
-  }
-  
 
   return {
     post,
