@@ -7,8 +7,6 @@ const reactions = require('../reactions/index')
 
 module.exports = (services) => {
 
-  
-
   function post(review) {
     return Async.of(review) 
       .map(createId)
@@ -28,7 +26,11 @@ module.exports = (services) => {
   }
 
   function get(id) {
-    return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
+    return services.data.get(id)
+      .chain(review => services.cache.get(`review-${id}`)
+        .coalesce(() => review, counts => assoc('counts', counts, review))
+      )
+      .chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
   }
 
   function byMovie(id) {

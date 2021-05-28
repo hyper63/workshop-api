@@ -1,6 +1,6 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
-const { assoc } = require('ramda')
+const { always, assoc, compose, over, lensProp, inc } = require('ramda')
 
 if (!globalThis.fetch) {
   throw new Error('fetch is not defined')
@@ -33,11 +33,56 @@ module.exports = {
     del: removeDocumentFromIndex
   },
   cache: {
-
+    inc: increment,
+    set,
+    get: getFromCache,
+    list
   },
   storage: {
 
   }
+}
+
+function list() {
+  return asyncFetch(hyper.url('cache', '_query') + '?pattern=*', {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
+}
+
+function increment(id, prop) {
+  return getFromCache(id)
+    .coalesce(
+      always({ count: 1, [prop]: 1 }),
+      compose(
+        over(lensProp('count'), inc),
+        over(lensProp(prop), inc)
+      )
+    )
+    .chain(v => set(id, v))
+}
+
+function set(key, value) {
+  return asyncFetch(hyper.url('cache'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({
+      key,
+      value
+    })
+  }).chain(toJSON)
+}
+
+function getFromCache(key) {
+  return asyncFetch(hyper.url('cache', key), {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
 }
 
 /**
@@ -95,12 +140,12 @@ function get(id) {
 }
 
 function del(id) {
-  return asyncFetch(hyper.url('data', id ), {
-      method: 'DELETE',
-       headers: { 
-          Authorization: `Bearer ${hyper.token()}`,
-          Accept: 'application/json'
-  }
+  return asyncFetch(hyper.url('data', id), {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`,
+      Accept: 'application/json'
+    }
   }).chain(toJSON)
 }
 

@@ -1,17 +1,32 @@
 const { validate } = require('./schema')
-const verify = require('../lib/verify')
-const { assoc, identity } = require('ramda')
+const { all, always, assoc, propEq, identity } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
+const verify = require('../lib/verify')
+
+function rollback(data, id) {
+  return function () {
+    return data.del(reaction.id)
+      .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not increment cache' }))
+  }
+}
 
 module.exports = (services) => {
   function post(reaction) {
-    return Async.of(reaction) 
+    return Async.of(reaction)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'reaction'))
-      .chain(services.data.create)
+      .chain(reaction =>
+        services.data.create(reaction)
+          .chain(() => services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction))
+          .bichain(rollback(services.data, reaction.id), Async.Resolved)
+          .map(({ ok }) => ({ ok, id: reaction.id }))
+      )
       .chain(verify)
+
+
+
   }
 
   function byReview(id) {

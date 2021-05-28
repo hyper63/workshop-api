@@ -3,9 +3,10 @@ const auth = require('../middleware/auth')
 
 
 module.exports = () => {
-  sinon.stub(auth, 'check').callsFake(function (req, res, next) {
+  const stub = sinon.stub(auth, 'check')
+
+  stub.callsFake(function (req, res, next) {
     req.user = 'bob'
     next()
   })
-
 }

@@ -47,7 +47,7 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
-//app.use(auth.check)
+app.use(auth.check)
 
 // movies
 app.post('/api/movies', movies.post)
