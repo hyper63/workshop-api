@@ -87,12 +87,12 @@ module.exports = (services) => {
     return services.search.del(key)
   }
 
-  function rollbackDelete(dataService, id, origMovie, origMovieReviews) {
+  function rollbackDelete(dataService,origMovie, origMovieReviews) {
     return function () {
       return Async.all(
         map((review) => reviews(services).post(review) , origMovieReviews)
       )
-        .chain( _ => services.data.post(origMovie)
+        .chain( _ => dataService.post(origMovie)
           .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
         )
     }
