@@ -3,7 +3,7 @@ const { Left, Right } = Either
 
 
 module.exports = (result) => {
-    console.log('verify result', result)
+    console.log('verify result', JSON.stringify(result))
     
     return Async.of(result)
     .map(result => result.ok

@@ -8,12 +8,13 @@ if (!globalThis.fetch) {
 
 const asyncFetch = Async.fromPromise(fetch)
 const toJSON = res => {
-
+  // Response will only be ok if status is between 200 - 299
   if (res.ok) {
     return Async.fromPromise(res.json.bind(res))()
   } else {
     return Async.fromPromise(res.text.bind(res))()
       .map(msg => ({ ok: false, status: res.status, message: msg }))
+      .chain(Async.Rejected)
   }
 }
 

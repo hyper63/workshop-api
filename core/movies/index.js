@@ -1,13 +1,24 @@
-const { validate, validateCriteria } = require('./schema')
+const { validate, validateCriteria, validateAlreadyExists } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map} = require('ramda')
+const { assoc, identity, prop, map, flatten, compose} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reviews = require('../reviews/index')
+const reactions = require('../reactions')
 
 module.exports = (services) => {
 
   function post(movie) {
+
+    //Async.of(movie)
+    /*
+  .map(createId)
+            .chain(movie => services.data.get(movie.id))
+            .chain(validateAlreadyExists)
+
+            .chain(validate)
+    
+    */
     return Async.of(movie)
       .map(createId)
       .chain(validate)
@@ -87,16 +98,27 @@ module.exports = (services) => {
     return services.search.del(key)
   }
 
-  function rollbackDelete(dataService,origMovie, origMovieReviews) {
+  function rollbackDelete(dataService,origMovie, origReviews, origReactions) {
     return function () {
-      return Async.all(
-        map((review) => reviews(services).post(review) , origMovieReviews)
-      )
-        .chain( _ => dataService.post(origMovie)
-          .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
-        )
+      console.log('rolling back', {origMovie,origReviews, origReactions})
+      return Async.of(origMovie)
+              .chain(_ => dataService.create(origMovie))
+              .chain(_ => Async.all( map((review) => reviews(services).post(review) , origReviews)))
+              .chain(_ => Async.all( map((reaction) => reactions(services).post(reaction) , origReactions)))
+              .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
     }
   }
+
+  // function rollbackDeleteOrig(dataService,origMovie, origMovieReviews) {
+  //   return function () {
+  //     return Async.all(
+  //       map((review) => reviews(services).post(review) , origMovieReviews)
+  //     )
+  //       .chain( _ => dataService.post(origMovie)
+  //         .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
+  //       )
+  //   }
+  // }
 
   function del(id) {
     return services.data.get(id)
@@ -105,23 +127,30 @@ module.exports = (services) => {
     .chain(origMovie => reviews(services).byMovie(id)
       .chain(verify)
       .map(prop('docs'))
-      .chain(origMovieReviews => Async.all(
-          map(({id, author}) => reviews(services).del({id, user: author}) , origMovieReviews)
-        )
-        .chain(results => Async.all(map(verify, results))
-          .chain( _ => services.data.del(id)
-              .chain(() => deleteMovieFromIndex(origMovie))
-              .bichain(rollbackDelete(services.data, id ,origMovie, origMovieReviews), Async.Resolved)
-              .map(({ ok }) => ({ ok, id: origMovie.id }))
+      .chain(origReviews => Async.all(
+          map(({id}) => reactions(services).byReview(id), origReviews) 
+          ).chain(reactions => Async.all(map(verify, reactions)))
+          .map(reactions => compose(
+                  flatten,
+                  map(prop("docs"))
+                )(reactions)
+              )
+              .chain(origReactions => Async.all(
+                  map(({id, author}) => reviews(services).del({id, user: author}) , origReviews)
+                )
+                .chain(results => Async.all(map(verify, results))
+                  .chain( _ => services.data.del(id)
+                      .chain(() => deleteMovieFromIndex(origMovie))
+                      .bichain(rollbackDelete(services.data,origMovie, origReviews, origReactions), Async.Resolved)          
+                      .map(({ ok }) => ({ ok, id: origMovie.id }))
+                    )
+                )
+              )
             )
-        )
-      )
-    )    
-    
-    
+          )    
     .chain(verify)
-
   }
+
 
   return {
     post,
@@ -131,8 +160,6 @@ module.exports = (services) => {
     search
   }
 }
-
-
 
 
 function createId(movie) {
