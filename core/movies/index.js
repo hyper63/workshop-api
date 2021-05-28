@@ -100,7 +100,7 @@ module.exports = (services) => {
 
   function rollbackDelete(dataService,origMovie, origReviews, origReactions) {
     return function () {
-      console.log('rolling back', {origMovie,origReviews, origReactions})
+     // console.log('rolling back', {origMovie,origReviews, origReactions})
       return Async.of(origMovie)
               .chain(_ => dataService.create(origMovie))
               .chain(_ => Async.all( map((review) => reviews(services).post(review) , origReviews)))
