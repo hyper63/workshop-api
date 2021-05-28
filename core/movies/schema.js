@@ -26,6 +26,18 @@ function validate (movie) {
   ).chain(eitherToAsync)
 } 
 
+function validateAlreadyExists (movie) {
+  return Async.of(movie)
+  .map(schema.safeParse)
+  .map(({success, data, error}) =>  success 
+    ? Left({
+      status: 400,
+      message: 'movie already exists'
+    })
+    : Right({ok: true}) 
+  ).chain(eitherToAsync)
+} 
+
 function validateCriteria (criteria) {
   return Async.of(criteria)
     .map(criteriaSchema.safeParse)
@@ -37,5 +49,6 @@ function validateCriteria (criteria) {
 
 module.exports = {
   validate,
-  validateCriteria
+  validateCriteria,
+  validateAlreadyExists
 }

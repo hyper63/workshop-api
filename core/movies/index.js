@@ -1,27 +1,71 @@
-const { validate, validateCriteria } = require('./schema')
+const { validate, validateCriteria, validateAlreadyExists } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map } = require('ramda')
+const { assoc, identity, prop, map, flatten, compose} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reviews = require('../reviews/index')
+const reactions = require('../reactions')
 
 module.exports = (services) => {
+
   function post(movie) {
-    return Async.of(movie) 
+
+    //Async.of(movie)
+    /*
+  .map(createId)
+            .chain(movie => services.data.get(movie.id))
+            .chain(validateAlreadyExists)
+
+            .chain(validate)
+    
+    */
+    return Async.of(movie)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(services.data.create)
-      .chain(verify)
+      .chain(movie => 
+        services.data.create(movie)
+          .chain(() => addMovieToIndex(movie))
+          .bichain(rollbackAdd(services.data, movie.id), Async.Resolved)
+          .map(({ ok }) => ({ ok, id: movie.id }))
+        )
+        .chain(verify)
   }
 
+  function rollbackAdd(dataService, id) {
+    return function () {
+      return dataService.del(id)
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not add to search index' }))
+    }
+  }
+
+  function rollbackUpdate(dataService, id, origData) {
+    return function () {
+      return dataService.update(id, origData)
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not update search index' }))
+    }
+  }
+  
+  
+  function addMovieToIndex (movie) {
+    const key = `${movie.title}-${movie.year}`
+    return services.search.create(key, movie)
+  }
+  
   function put(id, movie) {
     return Async.of(movie)
       .map(assoc('id', id))
       .chain(validate)
       .map(assoc('type', 'movie'))
-      .chain(movie => services.data.update(id, movie))
-      .chain(verify)
+      .chain(movie => 
+        get(id).chain(origMovie => 
+          services.data.update(id, movie)
+          .chain(() => addMovieToIndex(movie))
+          .bichain(rollbackUpdate(services.data, id ,origMovie), Async.Resolved)
+          .map(({ ok }) => ({ ok, id: movie.id }))
+          )
+      )
+        .chain(verify)
   }
 
   function get(id) {
@@ -42,29 +86,71 @@ module.exports = (services) => {
       .chain(doc => 
         services.search.query(
             doc.query, 
-            ['title', 'year', 'genre'], 
+            null, 
             doc.filter
         )
       )
       .chain(verify)
-
   }
 
+  function deleteMovieFromIndex (movie) {
+    const key = `${movie.title}-${movie.year}`
+    return services.search.del(key)
+  }
+
+  function rollbackDelete(dataService,origMovie, origReviews, origReactions) {
+    return function () {
+     // console.log('rolling back', {origMovie,origReviews, origReactions})
+      return Async.of(origMovie)
+              .chain(_ => dataService.create(origMovie))
+              .chain(_ => Async.all( map((review) => reviews(services).post(review) , origReviews)))
+              .chain(_ => Async.all( map((reaction) => reactions(services).post(reaction) , origReactions)))
+              .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
+    }
+  }
+
+  // function rollbackDeleteOrig(dataService,origMovie, origMovieReviews) {
+  //   return function () {
+  //     return Async.all(
+  //       map((review) => reviews(services).post(review) , origMovieReviews)
+  //     )
+  //       .chain( _ => dataService.post(origMovie)
+  //         .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
+  //       )
+  //   }
+  // }
 
   function del(id) {
     return services.data.get(id)
     .chain(validate)
     .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
-    .chain(review => reviews(services).byMovie(id))    
-    .chain(verify)
-    .map(prop('docs'))
-    .chain(movieReviews => Async.all(
-      map(({id, author}) => reviews(services).del({id, user: author}) , movieReviews)
-    ))
-    .chain(results => Async.all(map(verify, results)))
-    .chain( _ => services.data.del(id))
+    .chain(origMovie => reviews(services).byMovie(id)
+      .chain(verify)
+      .map(prop('docs'))
+      .chain(origReviews => Async.all(
+          map(({id}) => reactions(services).byReview(id), origReviews) 
+          ).chain(reactions => Async.all(map(verify, reactions)))
+          .map(reactions => compose(
+                  flatten,
+                  map(prop("docs"))
+                )(reactions)
+              )
+              .chain(origReactions => Async.all(
+                  map(({id, author}) => reviews(services).del({id, user: author}) , origReviews)
+                )
+                .chain(results => Async.all(map(verify, results))
+                  .chain( _ => services.data.del(id)
+                      .chain(() => deleteMovieFromIndex(origMovie))
+                      .bichain(rollbackDelete(services.data,origMovie, origReviews, origReactions), Async.Resolved)          
+                      .map(({ ok }) => ({ ok, id: origMovie.id }))
+                    )
+                )
+              )
+            )
+          )    
     .chain(verify)
   }
+
 
   return {
     post,

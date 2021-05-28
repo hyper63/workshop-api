@@ -14,6 +14,7 @@ const toJSON = res => {
   } else {
     return Async.fromPromise(res.text.bind(res))()
       .map(msg => ({ ok: false, status: res.status, message: msg }))
+      .chain(Async.Rejected)
   }
 }
 
@@ -26,7 +27,10 @@ module.exports = {
     del
   },
   search: {
-    query: find
+    query: find,
+    createIndex: createSearchIndex,
+    create: addDocumentToIndex,
+    del: removeDocumentFromIndex
   },
   cache: {
     inc: increment,
@@ -101,25 +105,7 @@ function query(selector = {}, fields, limit = 20) {
   }).chain(toJSON)
 }
 
-/**
- * @param {string} query
- * @param {array} fields - ['title', 'year']
- * @param {object} filter - { type: 'movie' }
-*/
-function find(query, fields, filter) {
-  let body = { query }
-  body = fields ? assoc('fields', fields, body) : body
-  body = filter ? assoc('filter', filter, body) : body
 
-  return asyncFetch(hyper.url('search', '_query'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${hyper.token()}`
-    },
-    body: JSON.stringify(body)
-  }).chain(toJSON)
-}
 
 function update(id, doc) {
   return asyncFetch(hyper.url('data', id), {
@@ -159,6 +145,67 @@ function del(id) {
     headers: {
       Authorization: `Bearer ${hyper.token()}`,
       Accept: 'application/json'
+    }
+  }).chain(toJSON)
+}
+
+/**
+ * @param {string} query
+ * @param {array} fields - ['title', 'year']
+ * @param {object} filter - { type: 'movie' }
+*/
+function find(query, fields, filter) {
+  let body = { query }
+  body = fields ? assoc('fields', fields, body) : body
+  body = filter ? assoc('filter', filter, body) : body
+
+  return asyncFetch(hyper.url('search', '_query'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify(body)
+  }).chain(toJSON)
+}
+
+/** 
+* @param {string} name - 'movies'
+* @param {array} fields - ['title', 'year']
+* @param {array} storeFields - ["id", "title", "type", "year"]
+*/
+function createSearchIndex(name, fields, storeFields) {
+
+  console.log('services createSearchIndex')
+  return asyncFetch(hyper.url('search', name), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({ fields, storeFields  })
+  }).chain(toJSON)
+
+}
+
+function addDocumentToIndex(key, doc) {
+  return asyncFetch(hyper.url('search'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({key,doc})
+  }).chain(toJSON)
+}
+
+function removeDocumentFromIndex(key) {
+  console.log('services removeDocumentFromIndex')
+  return asyncFetch(hyper.url('search', key), {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
     }
   }).chain(toJSON)
 }

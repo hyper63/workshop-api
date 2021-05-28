@@ -15,6 +15,7 @@ jobs:
       - run: yarn
       - run: yarn test
         env:
+          HYPER_APP_NAME: twilson63
           CI: true
           HYPER: ${{ secrets.HYPER }}
           SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
