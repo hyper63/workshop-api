@@ -8,7 +8,10 @@ const schema = z.object({
   title: z.string(),
   year: z.string(),
   actors: z.array(z.string()),
-  genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance'])
+  genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance']),
+  summary: z.string().optional(),
+  bannerURL: z.string().optional()
+  
 })
 
 const criteriaSchema = z.object({

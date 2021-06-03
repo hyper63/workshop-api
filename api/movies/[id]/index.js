@@ -32,4 +32,20 @@ exports.get = async ({core, params}, res, next) => {
     }
 
   }
+
   
+  
+exports.deleteSearchIndex = async ({core, params}, res, next) => {
+  const {key} = params 
+  console.log(`movies.${key}.deleteSearchIndex request`)
+
+  // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
+  //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
+  try {
+    const result = await core.movies.deleteSearchIndex(key).toPromise()
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+
+}

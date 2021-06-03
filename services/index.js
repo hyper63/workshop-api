@@ -30,7 +30,8 @@ module.exports = {
     query: find,
     createIndex: createSearchIndex,
     create: addDocumentToIndex,
-    del: removeDocumentFromIndex
+    del: removeDocumentFromIndex,
+    update: updateDocumentToIndex
   },
   cache: {
     inc: increment,
@@ -197,6 +198,10 @@ function addDocumentToIndex(key, doc) {
     },
     body: JSON.stringify({key,doc})
   }).chain(toJSON)
+}
+
+function updateDocumentToIndex(key, doc) {
+  return removeDocumentFromIndex(key).chain(() => addDocumentToIndex(key,doc))
 }
 
 function removeDocumentFromIndex(key) {

@@ -10,7 +10,9 @@ curl -X POST http://localhost:3000/api/movies/_search -H 'Content-Type: applicat
 
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield"],"genre": "comedy"}'
 
-curl -X PUT http://localhost:3000/api/movies/caddyshack -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield", "Doyle-Murphy"],"genre": "comedy"}'
+curl -X PUT http://localhost:3000/api/movies/caddyshack -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield", "Doyle-Murphy"],"genre": "comedy", "summary": "At an exclusive country club for WASPish snobs, an ambitious young caddy from an overpopulated home eagerly pursues a caddy scholarship in hopes of attending college and, in turn, avoiding a job at the lumber yard. In order to succeed, he must first win the favor of the elitist Judge Smails", "bannerURL":"https://belfastfilmfestival.org/assets/uploads/2017/07/caddyshack.png"}'
+
+
 
 *** Breakfast Club ***
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "breakfastclub", "title": "Breakfast Club","year": "1985","actors": ["Ringwold"],"genre": "comedy"}'
@@ -22,14 +24,16 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 
 ***** ROADHOUSE ******
 
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse", "title": "Road House","year": "1992","actors": ["Swayze"],"genre": "action"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
 
+
+curl -X PUT http://localhost:3000/api/movies/roadhouse-1 -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
 
 // review
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-10-roadhouse","movieId": "roadhouse","rating": 5,"summary": "So bad, its good","author": "Ott"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-10-roadhouse","movieId": "roadhouse-1","rating": 5,"summary": "So bad, its good","author": "Ott"}'
 
 
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-20-roadhouse","movieId": "roadhouse","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-20-roadhouse","movieId": "roadhouse-1","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
 
 // reaction
 

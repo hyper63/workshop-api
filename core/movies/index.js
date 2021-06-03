@@ -52,6 +52,15 @@ module.exports = (services) => {
     return services.search.create(key, movie)
   }
   
+  function deleteMovieFromIndex (movie) {
+    const key = `${movie.title}-${movie.year}`
+    return services.search.del(key)
+  }
+  function updateMovieToIndex (movie) {
+    const key = `${movie.title}-${movie.year}`
+    return services.search.update(key, movie)
+  }
+// const key = `${movie.title}-${movie.year}`
   function put(id, movie) {
     return Async.of(movie)
       .map(assoc('id', id))
@@ -60,7 +69,7 @@ module.exports = (services) => {
       .chain(movie => 
         get(id).chain(origMovie => 
           services.data.update(id, movie)
-          .chain(() => addMovieToIndex(movie))
+          .chain(() => updateMovieToIndex(movie))
           .bichain(rollbackUpdate(services.data, id ,origMovie), Async.Resolved)
           .map(({ ok }) => ({ ok, id: movie.id }))
           )
@@ -93,10 +102,7 @@ module.exports = (services) => {
       .chain(verify)
   }
 
-  function deleteMovieFromIndex (movie) {
-    const key = `${movie.title}-${movie.year}`
-    return services.search.del(key)
-  }
+  
 
   function rollbackDelete(dataService,origMovie, origReviews, origReactions) {
     return function () {
@@ -108,17 +114,6 @@ module.exports = (services) => {
               .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
     }
   }
-
-  // function rollbackDeleteOrig(dataService,origMovie, origMovieReviews) {
-  //   return function () {
-  //     return Async.all(
-  //       map((review) => reviews(services).post(review) , origMovieReviews)
-  //     )
-  //       .chain( _ => dataService.post(origMovie)
-  //         .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not delete search index' }))
-  //       )
-  //   }
-  // }
 
   function del(id) {
     return services.data.get(id)
@@ -151,13 +146,28 @@ module.exports = (services) => {
     .chain(verify)
   }
 
+  function deleteSearchIndex(key) {
+    return services.search.del(key)
+    /*
+    return Async.of(key)
+    .chain(() => deleteMovieFromIndex(key))
+    .bichain(Async.Rejected, Async.Resolved)          
+    .map(({ ok }) => ({ ok, id: key }))
+    */
+  }
+
+
+
+
+ 
 
   return {
     post,
     put,
     get,
     del,
-    search
+    search,
+    deleteSearchIndex
   }
 }
 

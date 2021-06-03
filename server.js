@@ -47,7 +47,7 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
-app.use(auth.check)
+//app.use(auth.check)
 
 // movies
 app.post('/api/movies', movies.post)
@@ -56,6 +56,7 @@ app.put('/api/movies/:id', movie.put)
 app.get('/api/movies/:id', movie.get)
 app.delete('/api/movies/:id', movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
+app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndex)
 
 // reviews
 app.get('/api/movies/:id/reviews', noop)
