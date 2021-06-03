@@ -12,6 +12,9 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 
 curl -X PUT http://localhost:3000/api/movies/caddyshack -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield", "Doyle-Murphy"],"genre": "comedy", "summary": "At an exclusive country club for WASPish snobs, an ambitious young caddy from an overpopulated home eagerly pursues a caddy scholarship in hopes of attending college and, in turn, avoiding a job at the lumber yard. In order to succeed, he must first win the favor of the elitist Judge Smails", "bannerURL":"https://belfastfilmfestival.org/assets/uploads/2017/07/caddyshack.png"}'
 
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-caddyshack","movieId": "caddyshack","rating": 5,"summary": "Top 3 funniest movie of all time.  Be the ball.","author": "Ott"}'
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-3-caddyshack","movieId": "caddyshack","rating": 5,"summary": "On my deathbed, I will be watching this movie to receive total consciousness. Goonga Galoonga","author": "D. Llama"}'
 
 
 *** Breakfast Club ***
@@ -25,7 +28,6 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 ***** ROADHOUSE ******
 
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
-
 
 curl -X PUT http://localhost:3000/api/movies/roadhouse-1 -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
 
