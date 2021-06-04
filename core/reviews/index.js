@@ -34,7 +34,7 @@ module.exports = (services) => {
   }
 
   function attachReviewCounts (review) {
-    console.log('inside attachReviewCOunts', review)
+    
       return Async.of(review)
       .chain(review => services.cache.get(`review-${review.id}`)
         .coalesce(() => review, counts => assoc('counts', counts, review))
@@ -60,18 +60,7 @@ module.exports = (services) => {
     .map(map(shapeReviewCounts))
     .map(reviews => assoc('docs', reviews, {ok: true}))
     .chain(verify)
-    
   }
-
-  
-
-  // function byMovieOrig(id) {
-  //   return services.data.query({
-  //     type: 'review',
-  //     movieId: id 
-  //   }).chain(verify)
-  // }
-
 
   function byUser(user) {
     return services.data.query({
@@ -80,9 +69,7 @@ module.exports = (services) => {
     }).chain(verify)
   }
 
-
   const delDoc = ({id}) => services.data.del(id)
-
 
   function del({id, user}) {
 
