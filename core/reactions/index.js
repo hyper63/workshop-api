@@ -12,6 +12,7 @@ function rollback(data, id) {
 }
 
 module.exports = (services) => {
+
   function post(reaction) {
     return Async.of(reaction)
       .map(createId)
@@ -25,8 +26,6 @@ module.exports = (services) => {
       )
       .chain(verify)
 
-
-
   }
 
   function byReview(id) {
@@ -35,6 +34,13 @@ module.exports = (services) => {
       reviewId: id
     })
   }
+
+
+  // return services.data.get(id)
+  //     .chain(review => services.cache.get(`review-${id}`)
+  //       .coalesce(() => review, counts => assoc('counts', counts, review))
+  //     )
+  //     .chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
 
   // function put(id, reaction) {
   //   return Async.of(reaction)

@@ -82,6 +82,8 @@ module.exports = (services) => {
   }
 
   function search(criteria) {
+
+    console.log('core/movies/index.js search(criteria)', criteria)
     return Async.of(criteria)
       .chain(validateCriteria)
       .map(criteria => {

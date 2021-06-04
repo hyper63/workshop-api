@@ -1,6 +1,6 @@
 const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map } = require('ramda')
+const { assoc, identity, prop, map, propOr, mergeDeepRight} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reactions = require('../reactions/index')
@@ -33,12 +33,44 @@ module.exports = (services) => {
       .chain(validate).bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
   }
 
+  function attachReviewCounts (review) {
+    console.log('inside attachReviewCOunts', review)
+      return Async.of(review)
+      .chain(review => services.cache.get(`review-${review.id}`)
+        .coalesce(() => review, counts => assoc('counts', counts, review))
+      )
+  }
+
+  function shapeReviewCounts (review) {
+    return mergeDeepRight({counts: {count: 0, like: 0, dislike: 0}}, review)
+  }
+
+
   function byMovie(id) {
     return services.data.query({
       type: 'review',
       movieId: id 
-    }).chain(verify)
+    })
+    .chain(verify)
+    .map(results => propOr([], "docs", results ))
+    //.map(reviews => tap(x => console.log(JSON.stringify(x, null, 2)), reviews))
+    .chain(reviews => Async.all(
+      map(attachReviewCounts , reviews)
+    ))
+    .map(map(shapeReviewCounts))
+    .map(reviews => assoc('docs', reviews, {ok: true}))
+    .chain(verify)
+    
   }
+
+  
+
+  // function byMovieOrig(id) {
+  //   return services.data.query({
+  //     type: 'review',
+  //     movieId: id 
+  //   }).chain(verify)
+  // }
 
 
   function byUser(user) {

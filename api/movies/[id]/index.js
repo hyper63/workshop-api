@@ -4,9 +4,7 @@ exports.put = ({ core, body, params}, res, next) =>
 
 exports.get = async ({core, params}, res, next) => {
     
-    console.log('**********')
-    console.log('hyper', process.env.HYPER)
-    console.log('**********')
+    console.log('movies/[id]/index.js get()')
     const {id} = params
   
     try {

@@ -160,6 +160,8 @@ function find(query, fields, filter) {
   body = fields ? assoc('fields', fields, body) : body
   body = filter ? assoc('filter', filter, body) : body
 
+  console.log('services/index.js find() `Bearer ${hyper.token()}`', `Bearer ${hyper.token()}`)
+
   return asyncFetch(hyper.url('search', '_query'), {
     method: 'POST',
     headers: {

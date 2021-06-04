@@ -37,6 +37,7 @@ app.use(cors())
 app.use(express.json())
 app.use(core)
 
+console.log('hello from server.js')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
