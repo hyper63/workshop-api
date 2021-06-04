@@ -86,10 +86,8 @@ module.exports = (services) => {
     .chain(results => Async.all(map(verify, results)))
     .chain( _ => services.data.del(id))
     .chain(verify)
-
   }
 
-  
   return {
     post,
     put,
@@ -100,14 +98,9 @@ module.exports = (services) => {
   }
 }
 
-
 function createId(review) {
   if (!review.id) {
     review = assoc('id', cuid(), review)
   }
   return review
 }
-
-
-
-

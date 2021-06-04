@@ -9,16 +9,6 @@ const reactions = require('../reactions')
 module.exports = (services) => {
 
   function post(movie) {
-
-    //Async.of(movie)
-    /*
-  .map(createId)
-            .chain(movie => services.data.get(movie.id))
-            .chain(validateAlreadyExists)
-
-            .chain(validate)
-    
-    */
     return Async.of(movie)
       .map(createId)
       .chain(validate)
@@ -60,7 +50,7 @@ module.exports = (services) => {
     const key = `${movie.title}-${movie.year}`
     return services.search.update(key, movie)
   }
-// const key = `${movie.title}-${movie.year}`
+
   function put(id, movie) {
     return Async.of(movie)
       .map(assoc('id', id))
@@ -82,8 +72,6 @@ module.exports = (services) => {
   }
 
   function search(criteria) {
-
-   // console.log('core/movies/index.js search(criteria)', criteria)
     return Async.of(criteria)
       .chain(validateCriteria)
       .map(criteria => {
@@ -108,7 +96,7 @@ module.exports = (services) => {
 
   function rollbackDelete(dataService,origMovie, origReviews, origReactions) {
     return function () {
-     // console.log('rolling back', {origMovie,origReviews, origReactions})
+     
       return Async.of(origMovie)
               .chain(_ => dataService.create(origMovie))
               .chain(_ => Async.all( map((review) => reviews(services).post(review) , origReviews)))
@@ -150,18 +138,7 @@ module.exports = (services) => {
 
   function deleteSearchIndex(key) {
     return services.search.del(key)
-    /*
-    return Async.of(key)
-    .chain(() => deleteMovieFromIndex(key))
-    .bichain(Async.Rejected, Async.Resolved)          
-    .map(({ ok }) => ({ ok, id: key }))
-    */
   }
-
-
-
-
- 
 
   return {
     post,
@@ -172,7 +149,6 @@ module.exports = (services) => {
     deleteSearchIndex
   }
 }
-
 
 function createId(movie) {
   if (!movie.id) {
