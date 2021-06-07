@@ -1,6 +1,7 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
-const { always, assoc, compose, over, lensProp, inc } = require('ramda')
+const { identity } = require('crocks/combinators')
+const { always, assoc, compose, over, lensProp, inc, dec, mergeLeft } = require('ramda')
 
 if (!globalThis.fetch) {
   throw new Error('fetch is not defined')
@@ -34,58 +35,21 @@ module.exports = {
     update: updateDocumentToIndex
   },
   cache: {
-    inc: increment,
+    increment,
+    decrement,
     set,
     get: getFromCache,
-    list
+    list,
+    del: removeFromCache
   },
   storage: {
 
   }
 }
 
-function list() {
-  return asyncFetch(hyper.url('cache', '_query') + '?pattern=*', {
-    headers: {
-      Authorization: `Bearer ${hyper.token()}`
-    }
-  }).chain(toJSON)
-}
-
-function increment(id, prop) {
-  return getFromCache(id)
-    .coalesce(
-      always({ count: 1, [prop]: 1 }),
-      compose(
-        over(lensProp('count'), inc),
-        over(lensProp(prop), inc)
-      )
-    )
-    .chain(v => set(id, v))
-}
-
-function set(key, value) {
-  return asyncFetch(hyper.url('cache'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${hyper.token()}`
-    },
-    body: JSON.stringify({
-      key,
-      value
-    })
-  }).chain(toJSON)
-}
-
-function getFromCache(key) {
-  return asyncFetch(hyper.url('cache', key), {
-    headers: {
-      Authorization: `Bearer ${hyper.token()}`
-    }
-  }).chain(toJSON)
-}
-
+/*********************/
+/*      DATA        */
+/*********************/
 /**
  * @param {object} selector
  * @param {array} fields
@@ -105,8 +69,6 @@ function query(selector = {}, fields, limit = 20) {
     body: JSON.stringify(body)
   }).chain(toJSON)
 }
-
-
 
 function update(id, doc) {
   return asyncFetch(hyper.url('data', id), {
@@ -150,6 +112,9 @@ function del(id) {
   }).chain(toJSON)
 }
 
+/*********************/
+/*      SEARCH       */
+/*********************/
 /**
  * @param {string} query
  * @param {array} fields - ['title', 'year']
@@ -217,3 +182,82 @@ function removeDocumentFromIndex(key) {
   }).chain(toJSON)
 }
 
+/*********************/
+/*      CACHE        */
+/*********************/
+function list() {
+  return asyncFetch(hyper.url('cache', '_query') + '?pattern=*', {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
+}
+
+function increment(id, prop) {
+  console.log('cache increment ', id, prop)
+ 
+
+
+  return getFromCache(id)
+    .coalesce(
+      always(mergeLeft({ count: 1, [prop]: 1 }, {dislike:0, count:0, like:0})),
+      compose(
+        over(lensProp('count'), inc),
+        over(lensProp(prop), inc)
+      )
+    )
+    .chain(v => {
+      console.log('increment after coalesce', id, v)
+      return set(id, v)
+    })
+}
+
+function decrement(id, prop) {
+  console.log('cache decrement ', id, prop)
+
+  return getFromCache(id)
+    .coalesce(
+      always({ count: 1, [prop]: 1 }),
+      compose(
+        over(lensProp('count'), dec),
+        over(lensProp(prop), dec)
+      )
+    )
+    .chain(v => set(id, v))
+}
+
+function set(key, value) {
+  console.log('set key/value to cache', key, value)
+
+
+  return asyncFetch(hyper.url('cache'), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify({
+      key,
+      value
+    })
+  }).chain(toJSON)
+}
+
+function getFromCache(key) {
+  return asyncFetch(hyper.url('cache', key), {
+    headers: {
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
+}
+
+function removeFromCache(key) {
+  console.log('services del (removeFromCache) ')
+  return asyncFetch(hyper.url('cache', key), {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    }
+  }).chain(toJSON)
+}

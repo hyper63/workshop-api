@@ -45,12 +45,17 @@ module.exports = (services) => {
     return mergeDeepRight({counts: {count: 0, like: 0, dislike: 0}}, review)
   }
 
-
+// /**
+//  * @param {object} selector
+//  * @param {array} fields
+//  * @param {number} limitß
+//  */
+//  function query(selector = {}, fields, limit = 20)
   function byMovie(id) {
     return services.data.query({
       type: 'review',
       movieId: id 
-    })
+    }, null, 100)
     .chain(verify)
     .map(results => propOr([], "docs", results ))
     //.map(reviews => tap(x => console.log(JSON.stringify(x, null, 2)), reviews))
@@ -69,9 +74,12 @@ module.exports = (services) => {
     }).chain(verify)
   }
 
-  const delDoc = ({id}) => services.data.del(id)
+  //const delDoc = ({id}) => services.data.del(id)
+
+  
 
   function del({id, user}) {
+    console.log('deleting review: ', id)
 
     return services.data.get(id)
     .chain(validate)
@@ -80,13 +88,16 @@ module.exports = (services) => {
     .chain(review => reactions(services).byReview(id))
     .chain(verify)
     .map(prop('docs'))
-    .chain(reactions => Async.all(
-      map(delDoc , reactions)
+    .chain(reviewReactions => Async.all(
+      map(reaction => services.data.del(reaction.id) , reviewReactions)
     ))
     .chain(results => Async.all(map(verify, results)))
+    .chain( _ => services.cache.del(`review-${id}`))
     .chain( _ => services.data.del(id))
     .chain(verify)
   }
+
+  // `review-${reaction.reviewId}`
 
   return {
     post,

@@ -8,14 +8,23 @@ curl -X POST http://localhost:3000/api/movies/_search -H 'Content-Type: applicat
 
 *** Caddyshack ***
 
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield"],"genre": "comedy"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield"],"genre": "comedy", "summary": "At an exclusive country club for WASPish snobs, an ambitious young caddy from an overpopulated home eagerly pursues a caddy scholarship in hopes of attending college and, in turn, avoiding a job at the lumber yard. In order to succeed, he must first win the favor of the elitist Judge Smails", "bannerURL":"https://belfastfilmfestival.org/assets/uploads/2017/07/caddyshack.png"}'
 
 curl -X PUT http://localhost:3000/api/movies/caddyshack -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield", "Doyle-Murphy"],"genre": "comedy", "summary": "At an exclusive country club for WASPish snobs, an ambitious young caddy from an overpopulated home eagerly pursues a caddy scholarship in hopes of attending college and, in turn, avoiding a job at the lumber yard. In order to succeed, he must first win the favor of the elitist Judge Smails", "bannerURL":"https://belfastfilmfestival.org/assets/uploads/2017/07/caddyshack.png"}'
+
+curl -X DELETE http://localhost:3000/api/movies/caddyshack 
+
 
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-caddyshack","movieId": "caddyshack","rating": 5,"summary": "Top 3 funniest movie of all time.  Be the ball.","author": "Ott"}'
 
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-3-caddyshack","movieId": "caddyshack","rating": 5,"summary": "On my deathbed, I will be watching this movie to receive total consciousness. Goonga Galoonga","author": "D. Llama"}'
 
+// reaction
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "DocBeeper"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "Spaulding"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "TyWebb"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Smails"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Ed"}'
 
 *** Breakfast Club ***
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "breakfastclub", "title": "Breakfast Club","year": "1985","actors": ["Ringwold"],"genre": "comedy"}'
@@ -38,7 +47,6 @@ curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/jso
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-20-roadhouse","movieId": "roadhouse-1","rating": 5,"summary": "I love Patrick S","author": "Jeff"}'
 
 // reaction
-
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1", "reviewId": "review-10-roadhouse", "reaction": "like", "user": "Arnold"}'
 
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2", "reviewId": "review-10-roadhouse", "reaction": "like", "user": "Tom W"}'
@@ -50,7 +58,9 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 
 ***** COMMANDO ****
 // movie
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action", "summary": "A retired special agent named John Matrix led an elite unit and has left the armed forces to live in a secluded mountain home with his daughter Jenny. But now he is forced out of retirement when his daughter is kidnapped by a band of thugs intent on revenge!", "bannerURL":"https://i.ytimg.com/vi/l2FlxbZlWic/maxresdefault.jpg"}'
+
+curl -X DELETE http://localhost:3000/api/movies/commando 
 
 // review
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-commando-1","movieId": "commando","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
@@ -60,11 +70,11 @@ curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/jso
 
 // reaction
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Arnold"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "dislike", "user": "Arnold"}'
 
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Tom W"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "like", "user": "Ott"}'
  
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Jeff"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "like", "user": "Jeff"}'
 
 
 ***** True Lies ****

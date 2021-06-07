@@ -1,27 +1,37 @@
 const { validate } = require('./schema')
-const { all, always, assoc, propEq, identity } = require('ramda')
+const {  assoc } = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const verify = require('../lib/verify')
 
-function rollback(data, id) {
+function rollbackPost(data, id) {
   return function () {
-    return data.del(reaction.id)
+    return data.del(id)
       .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not increment cache' }))
   }
 }
 
+
+// function rollbackDelete(data, reaction) {
+//   return function () {
+//     return data.create(reaction)
+//       .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not decrement cache' }))
+//   }
+// }
+
 module.exports = (services) => {
 
   function post(reaction) {
+
+    console.log('post reaction:' , reaction)
     return Async.of(reaction)
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'reaction'))
       .chain(reaction =>
         services.data.create(reaction)
-          .chain(() => services.cache.inc(`review-${reaction.reviewId}`, reaction.reaction))
-          .bichain(rollback(services.data, reaction.id), Async.Resolved)
+          .chain(() => services.cache.increment(`review-${reaction.reviewId}`, reaction.reaction))
+          .bichain(rollbackPost(services.data, reaction.id), Async.Resolved)
           .map(({ ok }) => ({ ok, id: reaction.id }))
       )
       .chain(verify)
@@ -34,6 +44,14 @@ module.exports = (services) => {
       reviewId: id
     })
   }
+
+  // function del(reaction) {
+  //   console.log('deleting reaction: ', reaction.id)
+  //   return services.data.del(reaction.id)
+  //     .chain(() => services.cache.decrement(`review-${reaction.reviewId}`, reaction.reaction))
+  //     .bichain(rollbackDelete(services.data, reaction), Async.Resolved)
+  //         .map(({ ok }) => ({ ok, id: reaction.id }))
+  // }
 
 
   // return services.data.get(id)
@@ -57,7 +75,8 @@ module.exports = (services) => {
 
   return {
     post,
-    byReview
+    byReview,
+    //del
     // put,
     // get
   }
