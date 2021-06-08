@@ -1,9 +1,27 @@
 const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map, propOr, mergeDeepRight} = require('ramda')
+const { assoc, identity, prop, map, propOr,  sortWith, descend, path, mergeDeepRight, curry, take, drop, compose} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reactions = require('../reactions/index')
+
+
+function createId(review) {
+  if (!review.id) {
+    review = assoc('id', cuid(), review)
+  }
+  return review
+}
+
+const sortByCount = sortWith([
+  descend(path(['counts','count']))
+])
+  
+const page = curry(({startIndex=0, pageSize=5}, data) => 
+  compose(
+    take(pageSize),
+    drop(startIndex)
+  )(data))
 
 module.exports = (services) => {
 
@@ -51,7 +69,18 @@ module.exports = (services) => {
 //  * @param {number} limitß
 //  */
 //  function query(selector = {}, fields, limit = 20)
-  function byMovie(id) {
+
+  
+
+//sortReviews(reviews)
+
+
+
+  function byMovie({id, options}) {
+/*
+options : { startIndex:5, pageSize :5 }
+*/
+
     return services.data.query({
       type: 'review',
       movieId: id 
@@ -63,6 +92,8 @@ module.exports = (services) => {
       map(attachReviewCounts , reviews)
     ))
     .map(map(shapeReviewCounts))
+    .map(sortByCount)
+    .map(page(options))
     .map(reviews => assoc('docs', reviews, {ok: true}))
     .chain(verify)
   }
@@ -73,10 +104,6 @@ module.exports = (services) => {
       author: user
     }).chain(verify)
   }
-
-  //const delDoc = ({id}) => services.data.del(id)
-
-  
 
   function del({id, user}) {
     console.log('deleting review: ', id)
@@ -97,8 +124,6 @@ module.exports = (services) => {
     .chain(verify)
   }
 
-  // `review-${reaction.reviewId}`
-
   return {
     post,
     put,
@@ -107,11 +132,4 @@ module.exports = (services) => {
     byUser,
     del
   }
-}
-
-function createId(review) {
-  if (!review.id) {
-    review = assoc('id', cuid(), review)
-  }
-  return review
 }

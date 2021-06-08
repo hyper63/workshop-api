@@ -58,23 +58,59 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 
 ***** COMMANDO ****
 // movie
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Arnold"],"genre": "action", "summary": "A retired special agent named John Matrix led an elite unit and has left the armed forces to live in a secluded mountain home with his daughter Jenny. But now he is forced out of retirement when his daughter is kidnapped by a band of thugs intent on revenge!", "bannerURL":"https://i.ytimg.com/vi/l2FlxbZlWic/maxresdefault.jpg"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Schwarzenegger"],"genre": "action", "summary": "A retired special agent named John Matrix led an elite unit and has left the armed forces to live in a secluded mountain home with his daughter Jenny. But now he is forced out of retirement when his daughter is kidnapped by a band of thugs intent on revenge!", "bannerURL":"https://i.ytimg.com/vi/l2FlxbZlWic/maxresdefault.jpg"}'
 
 curl -X DELETE http://localhost:3000/api/movies/commando 
 
 // review
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-commando-1","movieId": "commando","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
 
-
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-2-commando-1","movieId": "commando","rating": 1,"summary": "So bad, I threw up in my mouth","author": "Ott"}'
 
-// reaction
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-3-commando-1","movieId": "commando","rating": 5,"summary": "A glorius triumph.","author": "Awnawld"}'
 
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-4-commando-1","movieId": "commando","rating": 4,"summary": "A solid action flic.  A must see for Schwarzenegger fans.","author": "Tim"}'
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-5-commando-1","movieId": "commando","rating": 2,"summary": "Lots of pew, pew, pew.","author": "Alex"}'
+
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-6-commando-1","movieId": "commando","rating": 3,"summary": "So many quality pew-pews.","author": "Alexa"}'
+
+// reactions for review-1-commando-1
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "dislike", "user": "Arnold"}'
 
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "like", "user": "Ott"}'
  
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-1-commando", "reviewId": "review-1-commando-1", "reaction": "like", "user": "Jeff"}'
+
+
+// reactions for review-2-commando-1
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Carl"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Lenny"}'
+ 
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Frank"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "dislike", "user": "Marge"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-6-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "like", "user": "Maggie"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5-review-2-commando", "reviewId": "review-2-commando-1", "reaction": "dislike", "user": "Bart"}'
+
+// reactions for review-3-commando-1
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-3-commando", "reviewId": "review-3-commando-1", "reaction": "dislike", "user": "Patty"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-3-commando", "reviewId": "review-3-commando-1", "reaction": "like", "user": "Waylon"}'
+ 
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-review-3-commando", "reviewId": "review-3-commando-1", "reaction": "like", "user": "Selma"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-review-3-commando", "reviewId": "review-3-commando-1", "reaction": "like", "user": "Homer"}'
+
+// reactions for review-4-commando-1
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-review-4-commando", "reviewId": "review-4-commando-1", "reaction": "dislike", "user": "Patty"}'
+
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-review-4-commando", "reviewId": "review-4-commando-1", "reaction": "like", "user": "Waylon"}'
+ 
+
 
 
 ***** True Lies ****

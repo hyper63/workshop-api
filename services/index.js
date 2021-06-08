@@ -185,19 +185,58 @@ function removeDocumentFromIndex(key) {
 /*********************/
 /*      CACHE        */
 /*********************/
-function list() {
-  return asyncFetch(hyper.url('cache', '_query') + '?pattern=*', {
+function list(pattern) {
+  return asyncFetch(hyper.url('cache', '_query') + '?pattern=' + pattern, {
     headers: {
       Authorization: `Bearer ${hyper.token()}`
     }
   }).chain(toJSON)
 }
 
+/*
+- As a review is added: 
+  - add the review to the cache with a 
+    - key:  "movierating-commando-review-5-commando-1" from the review:  {"id": "review-5-commando-1","movieId": "commando"}
+    - value: {rating: 4}
+  - query / list all reviews from the cache for the current movie
+    - list(pattern="movierating-commando*")
+    - map the ratings to an array of rating integers
+    - calculate the new averate rating
+  - Add the new average rating to the cache with a:
+    - key: moviestats-commando
+    - value: {avgRating: 4.0}
+
+
+
+- id/key: movie-{movie.id}
+- stat: "avgRating"
+- statValue: 5
+- value in cache: {
+  avgRating: 4.0
+}
+*/
+
+function updateMovieStat(id, stat, statValue) {
+
+  return list("movie")
+    .map(filter(i=> i.id))
+    .coalesce(
+      always(mergeLeft({ [stat]: 1 }, {avgRating:0})),
+      compose(
+        over(lensProp('count'), inc),
+        over(lensProp(prop), inc)
+      )
+    )
+    .chain(v => {
+      console.log('setting: set(id,v)', {id, v})
+      return set(id, v)
+    })
+
+}
+
 function increment(id, prop) {
-  console.log('cache increment ', id, prop)
+  //console.log('cache increment ', id, prop)
  
-
-
   return getFromCache(id)
     .coalesce(
       always(mergeLeft({ count: 1, [prop]: 1 }, {dislike:0, count:0, like:0})),
@@ -207,7 +246,7 @@ function increment(id, prop) {
       )
     )
     .chain(v => {
-      console.log('increment after coalesce', id, v)
+      console.log('setting: set(id,v)', {id, v})
       return set(id, v)
     })
 }
