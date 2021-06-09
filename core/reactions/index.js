@@ -23,7 +23,7 @@ module.exports = (services) => {
 
   function post(reaction) {
 
-    console.log('post reaction:' , reaction)
+    //console.log('post reaction:' , reaction)
     return Async.of(reaction)
       .map(createId)
       .chain(validate)

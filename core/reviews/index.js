@@ -1,6 +1,6 @@
 const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map, propOr,  sortWith, descend, path, mergeDeepRight, curry, take, drop, compose} = require('ramda')
+const { assoc, identity, prop, map, propOr,  sortWith, descend, path, mergeDeepRight, curry, take, drop, compose, mean} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reactions = require('../reactions/index')
@@ -23,16 +23,58 @@ const page = curry(({startIndex=0, pageSize=5}, data) =>
     drop(startIndex)
   )(data))
 
+  function rollbackPost(data, review, cache, movieRatingCacheKey) {
+    return function () {
+      return data.del(review.id)
+        .chain(() => {
+          if (cache) {
+            return cache.del(movieRatingCacheKey)
+          }
+          return Async.Resolved
+
+        } )
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not calculate movie rating average' }))
+    }
+  }
+
+  function calcAvg(movieRatings) {
+    return compose(
+        mean,
+        map(path(['value','rating'])),
+        prop('docs')
+      )(movieRatings)
+  }
+
+
 module.exports = (services) => {
+
+  function calcMovieRating(movieId) {
+    return Async.of(movieId) 
+      .chain(() => services.cache.list(`movierating-${movieId}*`))
+      .map(movieRatings =>calcAvg(movieRatings))
+  }
+
 
   function post(review) {
     return Async.of(review) 
       .map(createId)
       .chain(validate)
       .map(assoc('type', 'review'))
-      .chain(services.data.create)
+      .chain(review =>
+        services.data.create(review)
+          .chain(() => services.cache.set(`movierating-${review.movieId}-${review.id}`, {rating:review.rating }) )
+          .bichain(rollbackPost(services.data, review), Async.Resolved)
+          .chain(() => calcMovieRating(review.movieId))
+          .chain(avgRating => 
+            services.cache.set(`moviestats-${review.movieId}`, {avgRating})
+            .bichain(rollbackPost(services.data, review,  services.cache, `movierating-${review.movieId}-${review.id}`), Async.Resolved)
+            .map(({ ok }) => ({ ok, id: review.id }))
+          )
+          
+      )
       .chain(verify)
   }
+
 
   function put(id, review) {
     return Async.of(review)
@@ -63,28 +105,19 @@ module.exports = (services) => {
     return mergeDeepRight({counts: {count: 0, like: 0, dislike: 0}}, review)
   }
 
-// /**
-//  * @param {object} selector
-//  * @param {array} fields
-//  * @param {number} limitß
-//  */
-//  function query(selector = {}, fields, limit = 20)
-
-  
-
-//sortReviews(reviews)
-
 
 
   function byMovie({id, options}) {
 /*
 options : { startIndex:5, pageSize :5 }
 */
+    console.log('byMovie options', options)
+    options = options ? options : { startIndex:0, pageSize:1000 }
 
     return services.data.query({
       type: 'review',
       movieId: id 
-    }, null, 100)
+    }, null, 1000)
     .chain(verify)
     .map(results => propOr([], "docs", results ))
     //.map(reviews => tap(x => console.log(JSON.stringify(x, null, 2)), reviews))

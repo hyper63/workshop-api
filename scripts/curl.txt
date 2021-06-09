@@ -12,7 +12,7 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 
 curl -X PUT http://localhost:3000/api/movies/caddyshack -H 'Content-Type: application/json' -d '{"id": "caddyshack", "title": "Caddyshack","year": "1980","actors": ["Murray", "Chase", "Knight", "Dangerfield", "Doyle-Murphy"],"genre": "comedy", "summary": "At an exclusive country club for WASPish snobs, an ambitious young caddy from an overpopulated home eagerly pursues a caddy scholarship in hopes of attending college and, in turn, avoiding a job at the lumber yard. In order to succeed, he must first win the favor of the elitist Judge Smails", "bannerURL":"https://belfastfilmfestival.org/assets/uploads/2017/07/caddyshack.png"}'
 
-curl -X DELETE http://localhost:3000/api/movies/caddyshack 
+
 
 
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-caddyshack","movieId": "caddyshack","rating": 5,"summary": "Top 3 funniest movie of all time.  Be the ball.","author": "Ott"}'

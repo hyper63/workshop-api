@@ -55,7 +55,7 @@ module.exports = {
  * @param {array} fields
  * @param {number} limitß
  */
-function query(selector = {}, fields, limit = 20) {
+function query(selector = {}, fields, limit = 100) {
   let body = { selector }
   body = fields ? assoc('fields', fields, body) : body
   body = limit ? assoc('limit', limit, body) : body
@@ -193,28 +193,7 @@ function list(pattern) {
   }).chain(toJSON)
 }
 
-/*
-- As a review is added: 
-  - add the review to the cache with a 
-    - key:  "movierating-commando-review-5-commando-1" from the review:  {"id": "review-5-commando-1","movieId": "commando"}
-    - value: {rating: 4}
-  - query / list all reviews from the cache for the current movie
-    - list(pattern="movierating-commando*")
-    - map the ratings to an array of rating integers
-    - calculate the new averate rating
-  - Add the new average rating to the cache with a:
-    - key: moviestats-commando
-    - value: {avgRating: 4.0}
 
-
-
-- id/key: movie-{movie.id}
-- stat: "avgRating"
-- statValue: 5
-- value in cache: {
-  avgRating: 4.0
-}
-*/
 
 function updateMovieStat(id, stat, statValue) {
 

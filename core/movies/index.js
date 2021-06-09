@@ -1,10 +1,11 @@
 const { validate, validateCriteria, validateAlreadyExists } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map, flatten, compose} = require('ramda')
+const { assoc, identity, prop, propOr, map, flatten, compose, cond, lte, gte,T, always} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reviews = require('../reviews/index')
 const reactions = require('../reactions')
+const Identity = require('crocks/Identity')
 
 module.exports = (services) => {
 
@@ -67,8 +68,35 @@ module.exports = (services) => {
         .chain(verify)
   }
 
+  const calcStars = cond([
+    [lte(0) && gte(.49),     always(0)],
+    [lte(.5) && gte(1.49),   always(1)],
+    [lte(1.5) && gte(2.49),  always(2)],
+    [lte(2.5) && gte(3.49),  always(3)],
+    [lte(3.5) && gte(4.49),  always(4)],
+    [T,                     always(5)]
+  ])
+
+  function setStatsProps({avgRating}, movie) {
+    avgRating = Number(avgRating.toFixed(2))
+    const stars = calcStars(avgRating)
+
+    return {...movie, avgRating, stars }
+
+  }
+
   function get(id) {
-    return services.data.get(id).chain(validate).bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
+    return services.data.get(id)
+    .chain(movie => 
+      services.cache.get(`moviestats-${movie.id}`)
+      .bichain(Async.Resolved, Async.Resolved)
+      .map(stats => {
+        stats = {avgRating: propOr(0 ,'avgRating', stats)}
+        return setStatsProps(stats, movie)
+      })
+    )
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
   }
 
   function search(criteria) {
