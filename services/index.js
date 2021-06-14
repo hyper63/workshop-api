@@ -1,6 +1,5 @@
 const hyper = require('@hyper.io/connect')
 const { Async } = require('crocks')
-const { identity } = require('crocks/combinators')
 const { always, assoc, compose, over, lensProp, inc, dec, mergeLeft } = require('ramda')
 
 if (!globalThis.fetch) {
