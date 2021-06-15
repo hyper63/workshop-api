@@ -1,6 +1,6 @@
 const { validate, validateUserIsAuthor } = require('./schema')
 const verify = require('../lib/verify')
-const { assoc, identity, prop, map, propOr,  sortWith, descend, path, mergeDeepRight, curry, take, drop, compose, mean} = require('ramda')
+const { assoc, identity, prop, map, propOr,  sortWith, descend, path, mergeDeepRight, curry, take, drop, compose, mean, mergeRight} = require('ramda')
 const { Async } = require('crocks')
 const cuid = require('cuid')
 const reactions = require('../reactions/index')
@@ -105,6 +105,14 @@ module.exports = (services) => {
     return mergeDeepRight({counts: {count: 0, like: 0, dislike: 0}}, review)
   }
 
+  function addReactionsToReview (review) {
+    return Async.of(review)
+    .chain(review => reactions(services).byReview(review.id))
+    .map(reactions => propOr([], "docs", reactions ))
+    .coalesce(() => review, reactions => assoc('reactions', reactions, review))
+
+}
+
 
 
   function byMovie({id, options}) {
@@ -127,6 +135,9 @@ options : { startIndex:5, pageSize :5 }
     .map(map(shapeReviewCounts))
     .map(sortByCount)
     .map(page(options))
+    .chain(reviews => Async.all(
+      map(addReactionsToReview , reviews)
+    ))
     .map(reviews => assoc('docs', reviews, {ok: true}))
     .chain(verify)
   }
