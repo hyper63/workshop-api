@@ -6,4 +6,6 @@ module.exports = (req, res) => {
   console.log('workshop-api api/auth/login.js res.redirect url: ', `${github}?client_id=${clientId}&state=${req.session.id}`)
 
   res.redirect(`${github}?client_id=${clientId}&state=${req.session.id}`)
+
+  res.redirect()
 }

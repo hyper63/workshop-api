@@ -4,7 +4,6 @@ const userUrl = 'https://api.github.com/user'
 const clientId = process.env.CLIENT_ID
 const secret = process.env.CLIENT_SECRET
 
-
 module.exports = async (req, res) => {
   console.log('workshop-api/auth/callback.js clientId: ', clientId)
   console.log('fetching tokenURL: ', tokenUrl)
