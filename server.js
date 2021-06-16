@@ -12,9 +12,9 @@ const core = require('./middleware/core')
 var auth = require('./middleware/auth')
 
 // AUTH api endpoints
-const login = require('./api/auth/login')
-const logout = require('./api/auth/logout')
-const callback = require('./api/auth/callback')
+// const login = require('./api/auth/login')
+// const logout = require('./api/auth/logout')
+// const callback = require('./api/auth/callback')
 
 // MOVIE api endpoints
 const movieReviews = require('./api/movies/[id]/reviews')
@@ -72,9 +72,9 @@ app.get('/api/reviews/:id/reactions', reactionsByReview)
 app.post('/api/reactions', postReaction)
 
 // auth
-app.get('/api/auth/login', login)
-app.get('/api/auth/callback', callback)
-app.get('/api/auth/logout', logout)
+// app.get('/api/auth/login', login)
+// app.get('/api/auth/callback', callback)
+// app.get('/api/auth/logout', logout)
 
 // health
 app.get('/', (req, res) => res.json({name: 'movie review api'}))
