@@ -6,6 +6,14 @@ const secret = process.env.CLIENT_SECRET
 
 
 module.exports = async (req, res) => {
+  console.log('workshop-api/auth/callback.js clientId: ', clientId)
+  console.log('fetching tokenURL: ', tokenUrl)
+  console.log('request body',{
+    client_id: clientId,
+    client_secret: secret,
+    code: req.query.code,
+    state: req.query.state
+  } )
   if (req.query.state === req.session.id) {
     const result = await fetch(tokenUrl, {
       method: 'POST',

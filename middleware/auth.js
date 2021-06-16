@@ -1,6 +1,6 @@
 const {not, isNil, find, includes} = require('ramda')
 
-const endpoints = [
+const protectedEndpoints = [
   //{method: "GET", path: "/api/reviews"},
   {method: "POST", path: "/api/movies"},
   {method: "PUT", path: "/api/movies"},
@@ -19,7 +19,7 @@ const okEndpoints = [
 const isProtectedEndpoint =  ({method, path}) => {
   return not(
     isNil(
-      find(endpoint => endpoint.method === method && includes( endpoint.path, path) , endpoints)
+      find(endpoint => endpoint.method === method && includes( endpoint.path, path) , protectedEndpoints)
     )
   ) && isNil(
     find(endpoint => endpoint.method === method && includes( endpoint.path, path) , okEndpoints)
