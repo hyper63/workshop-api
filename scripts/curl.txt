@@ -118,7 +118,7 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 
 ***** True Lies ****
 // movie
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "truelies", "title": "true lies","year": "1992","actors": ["Arnold"],"genre": "action"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "truelies", "title": "true lies","year": "1994","actors": ["Jamie Lee Curtis", "Schwarzenegger", "Tom Arnold"],"genre": "action", "summary": "Harry Tasker leads a double life. To his wife Helen and his daughter Dana, he is a boring computer salesman often away on business trips, while in actuality he is a secret agent for a U.S. intelligence agency named Omega Sector whose motto is The Last Line of Defense.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.NrV7wGpMi4pT_YniMn8kUQHaDK%26pid%3DApi&f=1"}'
 
 // review
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-truelies","movieId": "truelies","rating": 3,"summary": "Its cheezy","author": "Tom W."}'
