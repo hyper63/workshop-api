@@ -26,8 +26,12 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Smails"}'
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Ed"}'
 
-*** Breakfast Club ***
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "breakfastclub", "title": "Breakfast Club","year": "1985","actors": ["Ringwold"],"genre": "comedy"}'
+*** Sixteen Candles ***
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "Summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}'
+
+curl -X PUT http://localhost:3000/api/movies/sixteencandles -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}'
+
+
 
 *** St. Elmos Fire ***
 curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "stelmosfire", "title": "St. Elmos Fire","year": "1986","actors": ["Lowe", "Moore"],"genre": "comedy"}'
