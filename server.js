@@ -49,14 +49,12 @@ app.use(session({
   cookie: { secure: 'auto' }
 }))
 
-//app.use(auth.check)
-//app.use(verifyAppJWT)
 
 // movies
 app.post('/api/movies', verifyAppJWT, movies.post)
 app.post('/api/movies/_search', movies.search)
 app.put('/api/movies/:id', verifyAppJWT, movie.put)
-app.get('/api/movies/:id', movie.get)
+app.get('/api/movies/:id', verifyAppJWT, movie.get)
 app.delete('/api/movies/:id', verifyAppJWT, movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
@@ -77,9 +75,10 @@ app.post('/api/reactions', verifyAppJWT, postReaction)
 app.get('/', (req, res) => res.json({name: 'movie review api'}))
 
 app.use(function (err, req, res, next) {
-  console.log('ERROR:', req.method, req.path, err.message)
+  console.log('ERROR:', req.method, req.path, err)
+  
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ok: false, message: 'not authorized'})
+    return res.status(401).json({ok: false, message: 'Not Authorized'})
   }
   console.log('ERROR HANDLER error status', err.status, ' message ', err.message)
   res.status(err.status || 500).json({ok:false, message: err.message, status: err.status || 500})
