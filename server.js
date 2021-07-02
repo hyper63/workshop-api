@@ -10,6 +10,8 @@ if (!globalThis.fetch) {
 
 const core = require('./middleware/core')
 const verifyAppJWT = require('./middleware/verify-app-jwt')
+const verifyScope = require('./middleware/verify-scope')
+
 //var auth = require('./middleware/auth')
 
 // AUTH api endpoints
@@ -54,7 +56,10 @@ app.use(session({
 app.post('/api/movies', verifyAppJWT, movies.post)
 app.post('/api/movies/_search', movies.search)
 app.put('/api/movies/:id', verifyAppJWT, movie.put)
-app.get('/api/movies/:id', verifyAppJWT, movie.get)
+
+//TODO:  TUESDAY - make sure verifyScope() works
+
+app.get('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:READ'), movie.get)
 app.delete('/api/movies/:id', verifyAppJWT, movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
