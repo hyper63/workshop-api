@@ -2,9 +2,11 @@ exports.put = ({ core, body, params}, res, next) =>
   core.movies.put(params.id, body)
     .fork(next, res.json.bind(res))
 
-exports.get = async ({core, params}, res, next) => {
+exports.get = async ({core, params, user, isAllowedScope}, res, next) => {
+
+  //isAllowedScope(allowedScope)
     
-    console.log('movies/[id]/index.js get()')
+    console.log('movies/[id]/index.js get() req.user', user)
     const {id} = params
   
     try {

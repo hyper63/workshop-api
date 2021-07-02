@@ -9,7 +9,8 @@ if (!globalThis.fetch) {
 }
 
 const core = require('./middleware/core')
-var auth = require('./middleware/auth')
+const verifyAppJWT = require('./middleware/verify-app-jwt')
+//var auth = require('./middleware/auth')
 
 // AUTH api endpoints
 // const login = require('./api/auth/login')
@@ -49,32 +50,28 @@ app.use(session({
 }))
 
 //app.use(auth.check)
+//app.use(verifyAppJWT)
 
 // movies
-app.post('/api/movies', movies.post)
+app.post('/api/movies', verifyAppJWT, movies.post)
 app.post('/api/movies/_search', movies.search)
-app.put('/api/movies/:id', movie.put)
+app.put('/api/movies/:id', verifyAppJWT, movie.put)
 app.get('/api/movies/:id', movie.get)
-app.delete('/api/movies/:id', movie.del)
+app.delete('/api/movies/:id', verifyAppJWT, movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
-app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndex)
+app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
 
 // reviews
-app.get('/api/movies/:id/reviews', noop)
+app.get('/api/movies/:id/reviews', verifyAppJWT, noop)
 app.get('/api/reviews', reviews.get)
-app.post('/api/reviews', reviews.post)
+app.post('/api/reviews', verifyAppJWT,reviews.post)
 app.get('/api/reviews/:id', review.get)
-app.put('/api/reviews/:id', review.put)
-app.delete('/api/reviews/:id', review.del)
+app.put('/api/reviews/:id', verifyAppJWT, review.put)
+app.delete('/api/reviews/:id', verifyAppJWT, review.del)
 
 // reactions
 app.get('/api/reviews/:id/reactions', reactionsByReview)
-app.post('/api/reactions', postReaction)
-
-// auth
-// app.get('/api/auth/login', login)
-// app.get('/api/auth/callback', callback)
-// app.get('/api/auth/logout', logout)
+app.post('/api/reactions', verifyAppJWT, postReaction)
 
 // health
 app.get('/', (req, res) => res.json({name: 'movie review api'}))
