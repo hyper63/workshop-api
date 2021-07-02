@@ -84,7 +84,8 @@ app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ok: false, message: 'not authorized'})
   }
-  res.status(err.status || 500).json({ok:false, message: err.message})
+  console.log('ERROR HANDLER error status', err.status, ' message ', err.message)
+  res.status(err.status || 500).json({ok:false, message: err.message, status: err.status || 500})
 })
 
 

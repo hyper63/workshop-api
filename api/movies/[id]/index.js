@@ -9,8 +9,11 @@ exports.get = async ({core, params}, res, next) => {
   
     try {
       const result = await core.movies.get(id).toPromise()
+
+  
       res.json(result)
     } catch (err) {
+      console.log('err whut!', err)
       next(err)
     }
   
