@@ -59,7 +59,7 @@ app.put('/api/movies/:id', verifyAppJWT, movie.put)
 
 //TODO:  TUESDAY - make sure verifyScope() works
 
-app.get('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:READ'), movie.get)
+app.get('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:DELETE'), movie.get)
 app.delete('/api/movies/:id', verifyAppJWT, movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
@@ -80,14 +80,19 @@ app.post('/api/reactions', verifyAppJWT, postReaction)
 app.get('/', (req, res) => res.json({name: 'movie review api'}))
 
 app.use(function (err, req, res, next) {
-  console.log('ERROR:', req.method, req.path, err)
-  
+  console.log('ERROR HANDLER:')
+  console.log('err.name', err.name)
+  //console.log('err', err)
+ 
   if (err.name === 'UnauthorizedError') {
-    return res.status(401).json({ok: false, message: 'Not Authorized'})
+    console.log('UnauthorizedError')
+    console.log('err.status ',  err.status )
+    return res.status(401).json({ok: false,  status: 401, message: 'Not Authorized'})
   }
   console.log('ERROR HANDLER error status', err.status, ' message ', err.message)
   res.status(err.status || 500).json({ok:false, message: err.message, status: err.status || 500})
 })
+
 
 
 if (!module.parent) {

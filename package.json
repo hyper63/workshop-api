@@ -12,6 +12,7 @@
     "cuid": "^2.1.8",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "http-errors": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1",
     "ramda": "^0.27.1",
