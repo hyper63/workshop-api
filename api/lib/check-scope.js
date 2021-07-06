@@ -6,9 +6,9 @@ const {curry, contains, split, compose, cond, always, map, T, equals, flatten, h
 const transformWildcardScopes = (scope) => {
   
   const resource = compose(head, split(':'))(scope)
-  const movieScopes = ["CREATE","READ","UPDATE","SEARCH"]
-  const reviewScopes = ["CREATE","READ","UPDATE", "REACT"]
-  const reactionScopes = ["CREATE","READ","UPDATE"]
+  const movieScopes = ["CREATE","READ","UPDATE", "DELETE", "SEARCH"]
+  const reviewScopes = ["CREATE","READ","UPDATE", "DELETE", "REACT"]
+  const reactionScopes = ["CREATE","READ","UPDATE", "DELETE"]
   
   const prefixResourceToScopes = cond([
   [equals("MOVIE"),   always(map(scope => `${resource}:${scope}`, movieScopes))],

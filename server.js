@@ -53,28 +53,31 @@ app.use(session({
 
 
 // movies
-app.post('/api/movies', verifyAppJWT, movies.post)
+app.post('/api/movies', verifyAppJWT, verifyScope('MOVIE:CREATE'), movies.post)
 app.post('/api/movies/_search', movies.search)
-app.put('/api/movies/:id', verifyAppJWT, movie.put)
-
-//TODO:  TUESDAY - make sure verifyScope() works
-
-app.get('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:DELETE'), movie.get)
-app.delete('/api/movies/:id', verifyAppJWT, movie.del)
+app.put('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:UPDATE'), movie.put)
+app.get('/api/movies/:id', movie.get)
+app.delete('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:DELETE'), movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
 
+/*
+  const movieScopes = ["CREATE","READ","UPDATE", "DELETE", "SEARCH"]
+  const reviewScopes = ["CREATE","READ","UPDATE", "DELETE", "REACT"]
+  const reactionScopes = ["CREATE","READ","UPDATE", "DELETE"]
+*/
+
 // reviews
-app.get('/api/movies/:id/reviews', verifyAppJWT, noop)
+app.get('/api/movies/:id/reviews', noop)
 app.get('/api/reviews', reviews.get)
-app.post('/api/reviews', verifyAppJWT,reviews.post)
+app.post('/api/reviews', verifyAppJWT, verifyScope('REVIEW:CREATE'), reviews.post)
 app.get('/api/reviews/:id', review.get)
-app.put('/api/reviews/:id', verifyAppJWT, review.put)
-app.delete('/api/reviews/:id', verifyAppJWT, review.del)
+app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
+app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
 
 // reactions
 app.get('/api/reviews/:id/reactions', reactionsByReview)
-app.post('/api/reactions', verifyAppJWT, postReaction)
+app.post('/api/reactions', verifyAppJWT, verifyScope('REVIEW:REACT'), postReaction)
 
 // health
 app.get('/', (req, res) => res.json({name: 'movie review api'}))
@@ -86,7 +89,6 @@ app.use(function (err, req, res, next) {
  
   if (err.name === 'UnauthorizedError') {
     console.log('UnauthorizedError')
-    console.log('err.status ',  err.status )
     return res.status(401).json({ok: false,  status: 401, message: 'Not Authorized'})
   }
   console.log('ERROR HANDLER error status', err.status, ' message ', err.message)
