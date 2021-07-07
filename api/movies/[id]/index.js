@@ -36,11 +36,24 @@ exports.get = async ({core, params, user, isAllowedScope}, res, next) => {
 
   }
 
+  exports.deleteMovieManual = async ({core, user, params}, res, next) => {
+    const {id} = params 
+    console.log(`movies.${id}.del request`)
+
+    // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
+    //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
+    try {
+      const result = await core.movies.deleteMovieManual(id).toPromise()
+      res.json(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
   
-  
-exports.deleteSearchIndex = async ({core, params}, res, next) => {
+exports.deleteSearchIndexManual = async ({core, params}, res, next) => {
   const {key} = params 
-  console.log(`movies.${key}.deleteSearchIndex request`)
+  console.log(`movies.${key}.deleteSearchIndexManual request`)
 
   // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
   //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
@@ -50,5 +63,38 @@ exports.deleteSearchIndex = async ({core, params}, res, next) => {
   } catch (err) {
     next(err)
   }
+}
+
+exports.deleteCacheIndexManual = async ({core, params}, res, next) => {
+  const {key} = params 
+  console.log(`movies.${key}.deleteCacheIndexManual request`)
+
+  // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
+  //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
+  try {
+    const result = await core.movies.deleteCacheItem(key).toPromise()
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
 
 }
+
+exports.queryCacheManual = async ({core, params}, res, next) => {
+  const {pattern} = params 
+  
+  console.log(`/api/movies/cachequery/${pattern} queryCacheManual request`)
+
+  // https://3000-indigo-cougar-6v63rznm.ws-us07.gitpod.io/api/movies/commando-1 >> 
+  //  {"id":"commando-1","title":"Commando","year":"1986","actors":["Arnold"],"genre":"action"}
+  try {
+    const result = await core.movies.queryCacheManual(pattern).toPromise()
+    res.json(result)
+  } catch (err) {
+    next(err)
+  }
+
+}
+
+
+

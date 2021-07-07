@@ -59,7 +59,14 @@ app.put('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:UPDATE'), movie.put)
 app.get('/api/movies/:id', movie.get)
 app.delete('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:DELETE'), movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
-app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndex)
+
+
+//manual mode
+app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndexManual)
+app.delete('/api/movies/:id/delManual', verifyAppJWT, movie.deleteMovieManual)
+app.delete('/api/movies/cacheindex/:key', verifyAppJWT, movie.deleteCacheIndexManual)
+app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
+
 
 /*
   const movieScopes = ["CREATE","READ","UPDATE", "DELETE", "SEARCH"]

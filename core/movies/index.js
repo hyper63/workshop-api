@@ -47,9 +47,16 @@ module.exports = (services) => {
     const key = `${movie.title}-${movie.year}`
     return services.search.del(key)
   }
+
+
   function updateMovieToIndex (movie) {
     const key = `${movie.title}-${movie.year}`
     return services.search.update(key, movie)
+  }
+
+  function deleteMovieStatsFromCache (id) {
+    const key = `moviestats-${id}`
+    return services.cache.del(key)
   }
 
   function put(id, movie) {
@@ -133,6 +140,51 @@ module.exports = (services) => {
     }
   }
 
+  function del2(id) {
+    return services.data.get(id)
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
+    .chain(origMovie => reviews(services).byMovie(id)
+      .chain(verify)
+      .map(prop('docs'))
+      .chain(origReviews => Async.all(
+          map(({id}) => reactions(services).byReview(id), origReviews) 
+          ).chain(reactions => Async.all(map(verify, reactions)))
+          .map(reactions => compose(
+                  flatten,
+                  map(prop("docs"))
+                )(reactions)
+              )
+              .chain(origReactions => Async.all(
+                  map(({id, author}) => reviews(services).del({id, user: author}) , origReviews)
+                )
+                .chain(results => Async.all(map(verify, results))
+                  .chain( _ => services.data.del(id)
+                      .chain(() => deleteMovieFromIndex(origMovie))
+                      .chain(() => deleteMovieStatsFromCache(origMovie.id))
+                      .bichain(rollbackDelete(services.data,origMovie, origReviews, origReactions), Async.Resolved)          
+                      .map(({ ok }) => ({ ok, id: origMovie.id }))
+                    )
+                )
+              )
+            )
+          )    
+    .chain(verify)
+  }
+
+
+  function deleteMovieManual(id) {
+    return services.data.get(id)
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Movie Not Found'}) , identity)
+    .chain( movie => {
+        console.log('delManual movie', movie)
+        return services.data.del(id).map(({ ok }) => ({ ok, id: origMovie.id }))
+      }
+    )
+    .chain(verify)
+  }
+
   function del(id) {
     return services.data.get(id)
     .chain(validate)
@@ -168,13 +220,33 @@ module.exports = (services) => {
     return services.search.del(key)
   }
 
+  function deleteCacheItem(key) {
+    return services.cache.del(key)
+  }
+
+  function deleteCacheItem(key) {
+    return services.cache.del(key)
+  }
+
+  function queryCacheManual(pattern) {
+    return services.cache.list(pattern)
+  }
+
+  // movie.queryCacheManual)
+
+  // _query?pattern=movie*
+
+
   return {
     post,
     put,
     get,
-    del,
+    del: del2,
+    deleteMovieManual,
+    deleteCacheItem,
     search,
-    deleteSearchIndex
+    deleteSearchIndex,
+    queryCacheManual
   }
 }
 

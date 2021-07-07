@@ -31,6 +31,7 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 
 curl -X PUT http://localhost:3000/api/movies/sixteencandles -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}'
 
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-sixteencandles","movieId": "sixteencandles","rating": 5,"summary": "I told you dudes I was hot.","author": "Farmer Ted"}'
 
 
 *** St. Elmos Fire ***

@@ -5,7 +5,6 @@ const { Async } = require('crocks')
 const cuid = require('cuid')
 const reactions = require('../reactions/index')
 
-
 function createId(review) {
   if (!review.id) {
     review = assoc('id', cuid(), review)
@@ -149,6 +148,27 @@ options : { startIndex:5, pageSize :5 }
     }).chain(verify)
   }
 
+  function del2({id, user}) {
+    console.log('deleting review: ', id)
+
+    return services.data.get(id)
+    .chain(validate)
+    .bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
+    .chain(validateUserIsAuthor(user))
+    .chain(review => reactions(services).byReview(id)
+      .chain(verify)
+      .map(prop('docs'))
+      .chain(reviewReactions => Async.all(
+        map(reaction => services.data.del(reaction.id) , reviewReactions)
+      ))
+      .chain(results => Async.all(map(verify, results)))
+      .chain( _ => services.cache.del(`review-${id}`))
+      .chain( _ => services.cache.del(`review-${review.movieId}-${review.id}`))
+      .chain( _ => services.data.del(id))
+      .chain(verify)
+    )
+  }
+
   function del({id, user}) {
     console.log('deleting review: ', id)
 
@@ -174,6 +194,6 @@ options : { startIndex:5, pageSize :5 }
     get,
     byMovie,
     byUser,
-    del
+    del: del2
   }
 }
