@@ -54,9 +54,35 @@ module.exports = (services) => {
     return services.search.update(key, movie)
   }
 
-  function deleteMovieStatsFromCache (id) {
-    const key = `moviestats-${id}`
-    return services.cache.del(key)
+  function getMovieRatingKeys (cacheItems) {
+
+    //console.log('cacheItems', cacheItems)
+    const keys =  compose(
+      map(prop("key")),
+      prop("docs")
+    )(cacheItems)
+    
+    //console.log('keys', keys)
+    return keys
+
+
+  }
+
+  function deleteMovieStatsFromCache (movieId) {
+
+    console.log('deleteMovieStatsFromCache')
+    const movieStatsKey = `moviestats-${movieId}`
+    const movieRatingPattern = `movierating-${movieId}*`
+
+    return services.cache.del(movieStatsKey)
+    //.bichain(Async.Resolved, Async.Resolved)
+    .chain(() => services.cache.list(movieRatingPattern))
+    .map(getMovieRatingKeys)
+    .chain(keys => Async.all( map((key) => services.cache.del(key) , keys)))
+    .chain(results => Async.all(map(verify, results)))
+    .bimap(assoc('ok', false) , assoc('ok', true))
+   
+
   }
 
   function put(id, movie) {
