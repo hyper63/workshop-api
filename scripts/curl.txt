@@ -63,7 +63,6 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 
 ***** COMMANDO ****
 // movie
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "commando", "title": "Commando","year": "1986","actors": ["Schwarzenegger"],"genre": "action", "summary": "A retired special agent named John Matrix led an elite unit and has left the armed forces to live in a secluded mountain home with his daughter Jenny. But now he is forced out of retirement when his daughter is kidnapped by a band of thugs intent on revenge!", "bannerURL":"https://i.ytimg.com/vi/l2FlxbZlWic/maxresdefault.jpg"}'
 
 curl -X DELETE http://localhost:3000/api/movies/commando 
 

@@ -62,9 +62,9 @@ app.get('/api/movies/:id/reviews', movieReviews)
 
 
 //manual mode
-app.delete('/api/movies/searchindex/:key', verifyAppJWT, movie.deleteSearchIndexManual)
-app.delete('/api/movies/:id/delManual', verifyAppJWT, movie.deleteMovieManual)
-app.delete('/api/movies/cacheindex/:key', verifyAppJWT, movie.deleteCacheIndexManual)
+app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndexManual)
+app.delete('/api/movies/:id/delManual',  movie.deleteMovieManual)
+app.delete('/api/movies/cacheindex/:key',  movie.deleteCacheIndexManual)
 app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
 
 
