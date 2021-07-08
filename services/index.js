@@ -39,7 +39,8 @@ module.exports = {
     set,
     get: getFromCache,
     list,
-    del: removeFromCache
+    del: removeFromCache,
+    update: updateCache
   },
   storage: {
 
@@ -269,12 +270,27 @@ function getFromCache(key) {
 }
 
 function removeFromCache(key) {
-  console.log('services del (removeFromCache) ')
+  console.log('services del (removeFromCache) key:', key)
   return asyncFetch(hyper.url('cache', key), {
     method: 'DELETE',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${hyper.token()}`
     }
+  }).chain(toJSON)
+}
+
+
+function updateCache(key, value) {
+  console.log('services update (updateCache) key:', key)
+  console.log('services update (updateCache) value:', value)
+
+  return asyncFetch(hyper.url('cache', key), {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${hyper.token()}`
+    },
+    body: JSON.stringify(value)
   }).chain(toJSON)
 }

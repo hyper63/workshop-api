@@ -36,6 +36,15 @@ const page = curry(({startIndex=0, pageSize=5}, data) =>
     }
   }
 
+  function rollbackReviewUpdate(data, origReview , cache, origMovieRating, origMovieStats) {
+    return function () {
+      return data.update(origReview.id, origReview)
+        .chain(() => cache.update(`movierating-${origReview.movieId}-${origReview.id}`, origMovieRating))
+        .chain(() => cache.update(`moviestats-${origReview.movieId}`, origMovieStats))
+        .chain(() => Async.Rejected({ ok: false, status: 500, message: 'could not update review' }))
+    }
+  }
+
   function calcAvg(movieRatings) {
     return compose(
         mean,
@@ -73,16 +82,71 @@ module.exports = (services) => {
       )
       .chain(verify)
   }
-
-
   function put(id, review) {
     return Async.of(review)
       .map(assoc('id', id))
       .chain(validate)
       .map(assoc('type', 'review'))
-      .chain(review => services.data.update(id, review))
+      .chain(review => 
+        get(id).chain(origReview => 
+          services.cache.get(`movierating-${review.movieId}-${review.id}`)
+            .chain(origMovieRating => 
+              services.cache.get(`moviestats-${review.movieId}`)
+                .chain(origMovieStats => 
+                   services.data.update(id, review)
+                    .chain(() => services.cache.update(`movierating-${review.movieId}-${review.id}`, {rating: review.rating }) )
+                    .chain(() => calcMovieRating(review.movieId))
+                    .chain(avgRating => 
+                        services.cache.update(`moviestats-${review.movieId}`, {avgRating})
+                        .bichain(rollbackReviewUpdate(services.data, origReview , services.cache, origMovieRating, origMovieStats), Async.Resolved)
+                        .map(({ ok }) => ({ ok, id: review.id }))
+                    ) 
+                  )
+              )
+        )
+      )
       .chain(verify)
   }
+
+  // function put(id, review) {
+  //   return Async.of(review)
+  //     .map(assoc('id', id))
+  //     .chain(validate)
+  //     .map(assoc('type', 'review'))
+  //     .chain(review => 
+  //       get(id).chain(origReview =>
+  //         services.data.update(id, review)
+  //           .chain(() => services.cache.update(`movierating-${review.movieId}-${review.id}`, {rating: review.rating }) )
+  //           .chain(() => services.cache.update(`moviestats-${review.movieId}`, {avgRating}))
+  //           .bichain(rollbackReviewUpdate(services.data, origReview , cache, origMovieRating, origMovieStats), Async.Resolved)
+  //           .map(({ ok }) => ({ ok, id: review.id }))
+  //       )
+        
+      
+  //     )
+  //     .chain(verify)
+  // }
+
+  // function put(id, review) {
+  //   return Async.of(review)
+  //     .map(assoc('id', id))
+  //     .chain(validate)
+  //     .map(assoc('type', 'review'))
+  //     .chain(review => 
+  //       services.data.update(id, review)
+  //         .chain(() => services.cache.update(`movierating-${review.movieId}-${review.id}`, {rating:review.rating }) )
+  //         .bichain(rollbackPost(services.data, review), Async.Resolved)
+  //         .chain(() => calcMovieRating(review.movieId))
+  //         .chain(avgRating => 
+  //           services.cache.set(`moviestats-${review.movieId}`, {avgRating})
+  //           .bichain(rollbackPost(services.data, review,  services.cache, `movierating-${review.movieId}-${review.id}`), Async.Resolved)
+  //           .map(({ ok }) => ({ ok, id: review.id }))
+  //         )
+        
+      
+  //     )
+  //     .chain(verify)
+  // }
 
   function get(id) {
     return services.data.get(id)
@@ -148,7 +212,7 @@ options : { startIndex:5, pageSize :5 }
     }).chain(verify)
   }
 
-  function del2({id, user}) {
+  function del({id, user}) {
     console.log('deleting review: ', id)
 
     return services.data.get(id)
@@ -169,24 +233,24 @@ options : { startIndex:5, pageSize :5 }
     )
   }
 
-  function del({id, user}) {
-    console.log('deleting review: ', id)
+  // function del({id, user}) {
+  //   console.log('deleting review: ', id)
 
-    return services.data.get(id)
-    .chain(validate)
-    .bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
-    .chain(validateUserIsAuthor(user))
-    .chain(review => reactions(services).byReview(id))
-    .chain(verify)
-    .map(prop('docs'))
-    .chain(reviewReactions => Async.all(
-      map(reaction => services.data.del(reaction.id) , reviewReactions)
-    ))
-    .chain(results => Async.all(map(verify, results)))
-    .chain( _ => services.cache.del(`review-${id}`))
-    .chain( _ => services.data.del(id))
-    .chain(verify)
-  }
+  //   return services.data.get(id)
+  //   .chain(validate)
+  //   .bimap(e => ({status: 404, message: 'Review Not Found'}) , identity)
+  //   .chain(validateUserIsAuthor(user))
+  //   .chain(review => reactions(services).byReview(id))
+  //   .chain(verify)
+  //   .map(prop('docs'))
+  //   .chain(reviewReactions => Async.all(
+  //     map(reaction => services.data.del(reaction.id) , reviewReactions)
+  //   ))
+  //   .chain(results => Async.all(map(verify, results)))
+  //   .chain( _ => services.cache.del(`review-${id}`))
+  //   .chain( _ => services.data.del(id))
+  //   .chain(verify)
+  // }
 
   return {
     post,
@@ -194,6 +258,6 @@ options : { startIndex:5, pageSize :5 }
     get,
     byMovie,
     byUser,
-    del: del2
+    del
   }
 }

@@ -79,7 +79,8 @@ app.get('/api/movies/:id/reviews', noop)
 app.get('/api/reviews', reviews.get)
 app.post('/api/reviews', verifyAppJWT, verifyScope('REVIEW:CREATE'), reviews.post)
 app.get('/api/reviews/:id', review.get)
-app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
+//app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
+app.put('/api/reviews/:id',  review.put)
 app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
 
 // reactions
