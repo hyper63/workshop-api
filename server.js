@@ -81,7 +81,8 @@ app.post('/api/reviews', verifyAppJWT, verifyScope('REVIEW:CREATE'), reviews.pos
 app.get('/api/reviews/:id', review.get)
 //app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
 app.put('/api/reviews/:id',  review.put)
-app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
+//app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
+app.delete('/api/reviews/:id', verifyAppJWT, review.del)
 
 // reactions
 app.get('/api/reviews/:id/reactions', reactionsByReview)
