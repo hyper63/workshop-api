@@ -1,8 +1,10 @@
-{
-  title: z.string().optional(),
-  year: z.string().optional(),
-  genre: z.enum(['action', 'comedy', 'horror', 'scifi', 'drama', 'romance']).optional()
-}
+*** Manual Queries ***
+curl http://localhost:3000/api/movies/cachequery/* | json_pp
+
+** delete review *** 
+curl -X DELETE http://localhost:3000/api/reviews/review-tripott-caddyshack -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBSRVZJRVc6KiBSRUFDVElPTjoqIiwiaWF0IjoxNjI1MjU1MDM1fQ.uN0Xckxscqz1-YTBxfIrmWNW5U5YIZ8Dd0C2jePU5yk'
+
+
 
 curl -X POST http://localhost:3000/api/movies/_search -H 'Content-Type: application/json' -d '{"title": "Caddyshack","year": "1980", "genre": "comedy"}'
 

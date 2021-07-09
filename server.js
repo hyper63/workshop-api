@@ -62,10 +62,10 @@ app.get('/api/movies/:id/reviews', movieReviews)
 
 
 //manual mode
-app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndexManual)
-app.delete('/api/movies/:id/delManual',  movie.deleteMovieManual)
-app.delete('/api/movies/cacheindex/:key',  movie.deleteCacheIndexManual)
-app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
+// app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndexManual)
+// app.delete('/api/movies/:id/delManual',  movie.deleteMovieManual)
+// app.delete('/api/movies/cacheindex/:key',  movie.deleteCacheIndexManual)
+// app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
 
 
 /*
@@ -78,11 +78,11 @@ app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
 app.get('/api/movies/:id/reviews', noop)
 app.get('/api/reviews', reviews.get)
 app.post('/api/reviews', verifyAppJWT, verifyScope('REVIEW:CREATE'), reviews.post)
-app.get('/api/reviews/:id', review.get)
-//app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
+//app.get('/api/reviews/:id', review.get)
+app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
 app.put('/api/reviews/:id',  review.put)
-//app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
-app.delete('/api/reviews/:id', verifyAppJWT, review.del)
+app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
+//app.delete('/api/reviews/:id', verifyAppJWT, review.del)
 
 // reactions
 app.get('/api/reviews/:id/reactions', reactionsByReview)
@@ -94,7 +94,7 @@ app.get('/', (req, res) => res.json({name: 'movie review api'}))
 app.use(function (err, req, res, next) {
   console.log('ERROR HANDLER:')
   console.log('err.name', err.name)
-  //console.log('err', err)
+  
  
   if (err.name === 'UnauthorizedError') {
     console.log('UnauthorizedError')

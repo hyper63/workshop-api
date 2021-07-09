@@ -1,9 +1,9 @@
 const { assoc } = require('ramda')
 // POST /api/movies
 exports.post = async ({user, body, core}, res, next) => {
-  // what if no body
-  const movie = assoc('user', user, body)
+  
   try {
+    const movie = assoc('user', user, body)
     const result = await core.movies.post(movie).toPromise()
     res.json(result)
   } catch (err) {
@@ -12,13 +12,10 @@ exports.post = async ({user, body, core}, res, next) => {
 }
 
 exports.search = ({core, body}, res, next) => {
-   //console.log('api/movies/index.js search() body', body)
-
   return core.movies.search(body)
   .fork(
     next,
     res.json.bind(res)
   )
-
 }
   
