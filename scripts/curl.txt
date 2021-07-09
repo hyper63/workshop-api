@@ -22,18 +22,20 @@ curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/jso
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-3-caddyshack","movieId": "caddyshack","rating": 5,"summary": "On my deathbed, I will be watching this movie to receive total consciousness. Goonga Galoonga","author": "D. Llama"}'
 
 // reaction
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "DocBeeper"}'
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "Spaulding"}'
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "TyWebb"}'
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Smails"}'
-curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Ed"}'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-1-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "DocBeeper"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-2-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "Spaulding"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-3-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "like", "user": "TyWebb"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-4-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Smails"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5-caddyshack-1", "reviewId": "review-1-caddyshack", "reaction": "dislike", "user": "Ed"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
 
 *** Sixteen Candles ***
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "Summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
 
 curl -X PUT http://localhost:3000/api/movies/sixteencandles -H 'Content-Type: application/json' -d '{"id": "sixteencandles", "title": "Sixteen Candles","year": "1984","actors": ["Molly Ringwold", "Anthony Michael Hall"],"genre": "comedy", "summary": "A girls sweet sixteenth birthday becomes anything but special, as she suffers from every embarrassment possible.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.wPFhZk3MqYktPXCTVu1-PgHaD-%26pid%3DApi&f=1"}'
 
-curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-sixteencandles","movieId": "sixteencandles","rating": 5,"summary": "I told you dudes I was hot.","author": "Farmer Ted"}'
+curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-1-sixteencandles","movieId": "sixteencandles","rating": 5,"summary": "I told you dudes I was hot.","author": "Farmer Ted"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
 
 
 *** St. Elmos Fire ***
@@ -43,9 +45,9 @@ curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json
 
 ***** ROADHOUSE ******
 
-curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "roadhouse", "title": "Road House","year": "1989","actors": ["Patrick Swayze","Sam Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
 
-curl -X PUT http://localhost:3000/api/movies/roadhouse-1 -H 'Content-Type: application/json' -d '{"id": "roadhouse-1", "title": "Road House","year": "1989","actors": ["Swayze","Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
+curl -X PUT http://localhost:3000/api/movies/roadhouse -H 'Content-Type: application/json' -d '{"id": "roadhouse", "title": "Road House","year": "1989","actors": ["Swayze","Elliot"],"genre": "action", "summary": "Road House is a 1989 American action film directed by Rowdy Herrington and starring Patrick Swayze as a cooler at a newly refurbished roadside bar who protects a small town in Missouri from a corrupt businessman. Sam Elliott co-stars as a bouncer, the mentor, friend, and foil of Swayzes character. The cast also includes Kelly Lynch as Swayzes love interest and Ben Gazzara as the main antagonist.", "bannerURL":"https://img-www.tf-cdn.com/movie/2/road-house-1989.jpeg?_v=20170712231053&w=1024&h=512&dpr=1&auto=compress&fm=pjpg&fit=crop&crop=faces%2Ctop"}'
 
 // review
 curl -X POST http://localhost:3000/api/reviews -H 'Content-Type: application/json' -d '{"id": "review-10-roadhouse","movieId": "roadhouse-1","rating": 5,"summary": "So bad, its good","author": "Ott"}'
@@ -138,3 +140,52 @@ curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/j
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-5", "reviewId": "review-2-truelies", "reaction": "like", "user": "Tom W"}'
  
 curl -X POST http://localhost:3000/api/reactions -H 'Content-Type: application/json' -d '{"id": "reaction-6", "reviewId": "review-2-truelies", "reaction": "like", "user": "Jeff"}'
+
+
+*** Signs ***
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "signs", "title": "Signs", "year": "2002","actors": ["Mel Gibson, Joaquin Phoenix"],"genre": "scifi", "summary": "A family living on a farm finds mysterious crop circles in their fields which suggests something more frightening to come.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.e0aee5kdch28MTOfC7LncAHaEK%26pid%3DApi&f=1"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+*** Usual Suspects ***
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "usualsuspects", "title": "Usual Suspects", "year": "1995","actors": ["Stephen Baldwin", "Gabriel Byrne", "Benicio del Toro", "Kevin Pollak", "Chazz Palminteri", "Pete Postlethwaite", "Kevin Spacey"],"genre": "drama", "summary": "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.byrneholics.com%2Fwp-content%2Fuploads%2F2011%2F11%2Fusual-suspects-screencap-78.png&f=1&nofb=1"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+*** Fifth Element ***
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "fifthelement", "title": "Fifth Element", "year": "1997", "actors": ["Bruce Willis", "Gary Oldman", "Ian Holm", "Chris Tucker", "Milla Jovovich"], "genre": "scifi",  "summary": "Primarily set in the 23rd century, the films central plot involves the survival of planet Earth, which becomes the responsibility of Korben Dallas, a taxicab driver and former special forces major, after a young woman falls into his cab. To accomplish this, Dallas joins forces with her to recover four mystical stones essential for the defence of Earth against the impending attack of a malevolent cosmic entity. ",  "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi2.wp.com%2Fwww.doblu.com%2Fwp-content%2Fuploads%2F2018%2F01%2Ffifthelement14541.jpg%3Fssl%3D1&f=1&nofb=1"}'  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+*** Nacho Libre ***
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "nacho", "title": "Nacho Libre", "year": "2006","actors": ["Jack Black","Peter Stormare"],"genre": "comedy", "summary": "It stars Jack Black as Ignacio, a Catholic monk and lucha libre fan who secretly moonlights as a luchador to earn money for the orphanage where he works by day as a cook, knowing his fellow monks would look down upon his career and expel him if they discover it.",  "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FWhC-IZqoT6w%2Fmaxresdefault.jpg&f=1&nofb=1"}'  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "nacho", "title": "Nacho Libre", "year": "2006","actors": ["Jack Black","Peter Stormare"],"genre": "comedy", 
+"summary": "A family living on a farm finds mysterious crop circles in their fields which suggests something more frightening to come.", 
+"bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.e0aee5kdch28MTOfC7LncAHaEK%26pid%3DApi&f=1"}' 
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "thing", "title": "The Thing from Another World", "year": "1951","actors": ["Margaret Sheridan", "Kenneth Tobey"],"genre": "horror", "summary": "The films storyline concerns a U.S. Air Force crew and scientists who find a crashed flying saucer and a humanoid body frozen in the Arctic ice, near the craft. Returning to their remote research outpost with the body still in a block of ice, they are forced to defend themselves against the still alive and malevolent plant-based alien when it is accidentally defrosted.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi0.wp.com%2Fwww.doblu.com%2Fwp-content%2Fuploads%2F2018%2F11%2Fthinganotherworld11023.jpg%3Ffit%3D1920%252C1080%26ssl%3D1&f=1&nofb=1"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "always", "title": "Always", "year": "1989","actors": ["Richard Dreyfuss", "Holly Hunter","John Goodman"],"genre": "romance", "summary": "The spirit of a recently deceased expert pilot mentors a newer pilot while watching him fall in love with the girlfriend that he left behind.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.-q0RPWc9HWXuQoH9wNthegHaDS%26pid%3DApi&f=1"}'  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+** Empire of the Sun**
+
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "empire", "title": "Empire of the Sun", "year": "1987","actors": ["Christian Bale", "John Malkovich"],"genre": "action", "summary": "AThe film tells the story of Jamie Graham, a young boy who goes from living in a wealthy British family in Shanghai, to becoming a prisoner of war in a Japanese internment camp, during World War II.", "bannerURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fartsemerson.org%2FArticleMedia%2FImages%2FBranding%2FArtsEmerson%2Ffilms%2F1112%2520films%2Ffilm-empire.jpg&f=1&nofb=1"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+
+
+
+
+
+
+
+** Sleepless **
+
+curl -X POST http://localhost:3000/api/movies -H 'Content-Type: application/json' -d '{"id": "sleepless", "title": "Sleepless in Seattle", "year": "1993","actors": ["Tom Hanks", "Meg Ryan"],"genre": "romance", "summary": "A recently widowed mans son calls a radio talk-show in an attempt to find his father a partner.",  "bannerURL":"https://s3.drafthouse.com/images/made/sleepless-in-seattle_1_1050_591_81_s_c1.jpg"}' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0cmlwb3R0Iiwic2NvcGUiOiJNT1ZJRTpTRUFSQ0ggTU9WSUU6UkVBRCBNT1ZJRTpDUkVBVEUgTU9WSUU6REVMRVRFIFJFVklFVzoqIFJFQUNUSU9OOioiLCJpYXQiOjE2MjU4NDg1MDV9.SAfYsLR6toWza2GjsddsA0VrxmNFDpS-k5Hejdt1zD0'
+

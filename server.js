@@ -55,17 +55,17 @@ app.use(session({
 // movies
 app.post('/api/movies', verifyAppJWT, verifyScope('MOVIE:CREATE'), movies.post)
 app.post('/api/movies/_search', movies.search)
-app.put('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:UPDATE'), movie.put)
+app.put('/api/movies/:id', verifyAppJWT, movie.put)
 app.get('/api/movies/:id', movie.get)
 app.delete('/api/movies/:id', verifyAppJWT, verifyScope('MOVIE:DELETE'), movie.del)
 app.get('/api/movies/:id/reviews', movieReviews)
 
 
 //manual mode
-// app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndexManual)
-// app.delete('/api/movies/:id/delManual',  movie.deleteMovieManual)
-// app.delete('/api/movies/cacheindex/:key',  movie.deleteCacheIndexManual)
-// app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
+app.delete('/api/movies/searchindex/:key', movie.deleteSearchIndexManual)
+app.delete('/api/movies/:id/delManual',  movie.deleteMovieManual)
+app.delete('/api/movies/cacheindex/:key',  movie.deleteCacheIndexManual)
+app.get('/api/movies/cachequery/:pattern', movie.queryCacheManual)
 
 
 /*
@@ -78,7 +78,7 @@ app.get('/api/movies/:id/reviews', movieReviews)
 app.get('/api/movies/:id/reviews', noop)
 app.get('/api/reviews', reviews.get)
 app.post('/api/reviews', verifyAppJWT, verifyScope('REVIEW:CREATE'), reviews.post)
-//app.get('/api/reviews/:id', review.get)
+app.get('/api/reviews/:id', review.get)
 app.put('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:UPDATE'),  review.put)
 app.put('/api/reviews/:id',  review.put)
 app.delete('/api/reviews/:id', verifyAppJWT, verifyScope('REVIEW:DELETE'), review.del)
